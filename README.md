@@ -1,6 +1,6 @@
 # myweb
 
-Refrac and variant based on :<br><br>
+Refactor, and variant based on :<br><br>
 https://github.com/BamWidyat/blog-web <br>
 https://github.com/BamWidyat/blog-datom <br>
 https://github.com/BamWidyat/test-datom
