@@ -8,3 +8,7 @@
   []
   (require 'dev)
   (in-ns 'dev))
+
+(defn start-dev
+  []
+  (println "Don't you mean (dev) then (start-dev) ?") "moron...")

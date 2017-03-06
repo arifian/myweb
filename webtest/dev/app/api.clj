@@ -12,3 +12,12 @@
       (let [request (:request context)
             response {:status 200 :body (mold/home-html @database)}]
         (assoc context :response response)))}))
+
+(def about-main
+  (interceptor
+   {:name :about
+    :enter
+    (fn [context]
+      (let [request (:request context)
+            response {:status 200 :body mold/about-html}]
+        (assoc context :response response)))}))

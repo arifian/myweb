@@ -1,7 +1,11 @@
 (ns dev
   (:require [io.pedestal.http :as http]
             [io.pedestal.test :as test]
-            [app.routing :as routing]))
+            [clojure.tools.namespace.repl :refer [refresh]]
+            [app.routing :as routing]
+            [app.api :as api]
+            [app.function :as foo]
+            [app.template :as mold]))
 
 (def service-map "declaring initial service map"
   {::http/routes routing/routes
@@ -27,6 +31,18 @@
 (defn restart []
   (stop-dev)
   (start-dev))
- 
+
+;utils
+
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))
+
+(defn check-routes
+  "Print our application's routes"
+  []
+  (routing/print-routes))
+
+(defn named-route
+  "Finds a route by name"
+  [route-name]
+  (routing/named-route route-name))

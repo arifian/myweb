@@ -15,7 +15,7 @@
   :main webtest.core
   :source-paths ["src" "config"]
   :repl-options {:init-ns user}
-  :plugins [[lein-cloverage "1.0.7-SNAPSHOT"]
+  #_:plugins #_[[lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-cljsbuild "1.1.4"]]
   :jvm-opts ["-Xms256M" "-Xmx512M" "-server" "-XX:-OmitStackTraceInFastThrow"]
   :profiles
