@@ -1,8 +1,10 @@
 # webtest
 
-A Clojure library designed to ... well, that part is up to you.
+Alfa web (no datomic)
 
 ## Usage
+
+lein repl -> (dev) -> (start-dev)
 
 FIXME
 

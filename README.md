@@ -1,8 +1,8 @@
-# webtest
+# myweb
 
-Refrac and variant based on :
-https://github.com/BamWidyat/blog-web
-https://github.com/BamWidyat/blog-datom
+Refrac and variant based on :<br><br>
+https://github.com/BamWidyat/blog-web <br>
+https://github.com/BamWidyat/blog-datom <br>
 https://github.com/BamWidyat/test-datom
 
 ## Usage
