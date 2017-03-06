@@ -29,4 +29,4 @@
 (defn -main [& args]
   (dotimes [i 5]
     (println "Environment speed test : ")
-    (time (sieve 2000))))
+    (time (sieve 100))))
