@@ -7,6 +7,8 @@
             [app.function :as foo]
             [app.template :as mold]))
 
+#_(refresh) ;refresh ns
+
 (def service-map "declaring initial service map"
   {::http/routes routing/routes
    ::http/type   :jetty
