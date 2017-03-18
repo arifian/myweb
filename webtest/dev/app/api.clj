@@ -6,7 +6,7 @@
                      :test2 {:number 2 :title "Lorem Ipsum #2" :content "Nunc eget tempus diam, ut ultricies justo. Nullam consectetur quam ac ex vehicula sodales. Nullam vehicula eget purus ut pellentesque. Vestibulum ultrices massa quis augue volutpat, a scelerisque purus finibus. Quisque nunc tellus, posuere ut ipsum nec, euismod fermentum arcu. Cras rutrum sed ipsum at volutpat. Nunc imperdiet, lectus in cursus eleifend, nulla eros dignissim quam, at tempor augue velit sit amet lacus. Nunc id purus augue. Quisque in magna dapibus, consectetur metus ac, feugiat elit. Nunc eu ligula ut tellus rhoncus mollis. Etiam faucibus eu massa quis laoreet."}
                      :test3 {:number 3 :title "Lorem Ipsum #3" :content "Maecenas facilisis feugiat metus vitae mollis. Donec sit amet mauris scelerisque, mattis arcu et, vulputate nisl. Sed nec placerat sem. Vivamus in dictum eros, nec porta est. Cras porta finibus blandit. Vestibulum turpis ante, rutrum porttitor est ac, vulputate vulputate nisl. Nam dictum nunc ac leo aliquam pellentesque. Fusce mollis sed mi vitae egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus sit amet orci dictum, laoreet augue vel, malesuada est. In laoreet justo sit amet neque faucibus dapibus. Phasellus et magna malesuada, elementum enim in, imperdiet est. Mauris porttitor dui dolor, nec eleifend turpis hendrerit aliquet."}}))
 
-(def home-main
+(def home-su-15
   (interceptor
    {:name :home-main
     :enter
@@ -15,7 +15,16 @@
             response {:status 200 :body (mold/home-html @database)}]
         (assoc context :response response)))}))
 
-(def about-main
+(def landing-su-15
+  (interceptor
+   {:name :about
+    :enter
+    (fn [context]
+      (let [request (:request context)
+            response {:status 200 :body mold/landing-html}]
+        (assoc context :response response)))}))
+
+(def about-su-15
   (interceptor
    {:name :about
     :enter

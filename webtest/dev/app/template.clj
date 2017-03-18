@@ -13,16 +13,16 @@
              [:nav {:class "navbar navbar-inverse"}
               [:div {:class "container-fluid"}
                [:div {:class "navbar-header"}
-                [:a {:class "navbar-brand" :href "/"} "BlogWeb"]]
+                [:a {:class "navbar-brand" :href "/"} "LOGO"]]
                [:ul {:class "nav navbar-nav"}
-                [:li {:class "active"} [:a {:href "/"} "Home"]]
+                [:li {:class "active"} [:a {:href "/home"} "Home"]]
                 [:li [:a {:href "/about"} "About"]]]
                [:ul {:class "nav navbar-nav navbar-right"}
                 [:li [:a {:href "#"} [:span {:class "glyphicon glyphicon-user"}] " Sign Up"]]
                 [:li [:a {:href "#"} [:span {:class "glyphicon glyphicon-log-in"}] " Login"]]]]]
-             [:div {:class "jumbotron text-center"}
+             #_[:div {:class "jumbotron text-center"}
               [:h1 "Home Page"]
-              [:p "Welcome to blog test page"]]
+              [:p "BLOG"]]
              [:div {:class "container"}
               (if (empty? post)
                 [:div {:class "text-center"} "No Post Yet!" [:br][:br]]
@@ -41,9 +41,9 @@
              [:nav {:class "navbar navbar-inverse"}
               [:div {:class "container-fluid"}
                [:div {:class "navbar-header"}
-                [:a {:class "navbar-brand" :href "/"} "BlogWeb"]]
+                [:a {:class "navbar-brand" :href "/"} "LOGO"]]
                [:ul {:class "nav navbar-nav"}
-                [:li [:a {:href "/"} "Home"]]
+                [:li [:a {:href "/home"} "Home"]]
                 [:li {:class "active"} [:a {:href "/about"} "About"]]]
                [:ul {:class "nav navbar-nav navbar-right"}
                 [:li [:a {:href "#"} [:span {:class "glyphicon glyphicon-user"}] " Sign Up"]]
@@ -55,3 +55,23 @@
               [:p (:satu aboutstring)]
               [:p (:dua aboutstring)]
               [:p (:tiga aboutstring)]]]]))
+
+(def landing-html
+  (hc/html [:html
+            [:head
+             [:title "Welcome!"]
+             (foo/bootstrap)]
+            [:body
+             [:nav {:class "navbar navbar-inverse"}
+              [:div {:class "container-fluid"}
+               [:div {:class "navbar-header"}
+                [:a {:class "navbar-brand" :href "/"} "LOGO"]]
+               [:ul {:class "nav navbar-nav"}
+                [:li [:a {:href "/home"} "Home"]]
+                [:li [:a {:href "/about"} "About"]]]
+               [:ul {:class "nav navbar-nav navbar-right"}
+                [:li [:a {:href "#"} [:span {:class "glyphicon glyphicon-user"}] " Sign Up"]]
+                [:li [:a {:href "#"} [:span {:class "glyphicon glyphicon-log-in"}] " Login"]]]]]
+             [:div {:class "jumbotron text-center"}
+              [:h1 "BANNER"]
+              [:p "SUB-BANNER"]]]]))

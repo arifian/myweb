@@ -8,8 +8,9 @@
 
 (def common-interceptors [(bd/body-params) http/html-body])
 
-(def baseroutes #{["/" :get (conj common-interceptors api/home-main) :route-name :home-page]
-                  ["/about" :get (conj [http/html-body] api/about-main)]
+(def baseroutes #{["/" :get (conj common-interceptors api/landing-su-15) :route-name :landing-page]
+                  ["/home" :get (conj common-interceptors api/home-su-15) :route-name :home-page]
+                  ["/about" :get (conj [http/html-body] api/about-su-15) :route-name :about-page]
                   #_["/new" :get [common-interceptors new-post]]
                   #_["/ok" :post [common-interceptors create-post]]
                   #_["/okedit/:postid" :post [common-interceptors edit-post-ok]]

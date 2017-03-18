@@ -20,15 +20,19 @@
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
+  (println "\nstarting... \n")
   (reset! server
           (-> (assoc service-map ::http/join? false)
               http/create-server
-              http/start)))
+              http/start))
+  (println "nice \n"))
 
 (defn stop-dev
   "stopping server"
   []
-  (http/stop @server))
+  (println "\n stopping server ... \n")
+  (http/stop @server)
+  (println "nice \n\n"))
 
 (defn restart []
   (stop-dev)
