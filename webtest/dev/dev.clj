@@ -44,7 +44,7 @@
   (swap! api/database merge api/samplepost))
 
 (defn resetpost "reset data" []
-  (reset! api/database merge nil))
+  (reset! api/database nil))
 
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))

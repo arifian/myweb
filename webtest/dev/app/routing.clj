@@ -11,8 +11,9 @@
 (def baseroutes #{["/" :get (conj common-interceptors (api/landing-su-15)) :route-name :landing-r]
                   ["/postlist" :get (conj common-interceptors (api/postlist-su-15)) :route-name :postlist-r]
                   ["/about" :get (conj common-interceptors (api/about-su-15)) :route-name :about-r]
-                  ["/createpost" :get (conj common-interceptors (api/createpost-su-15-get)) :route-name :createpost-rget]
-                  ["/createpost" :post (conj common-interceptors (api/createpost-su-15-post)) :route-name :createpost-rpost]})
+                  ["/newpost" :get (conj common-interceptors (api/newpost-su-15)) :route-name :newpost-r]
+                  ["/createpost" :post (conj common-interceptors (api/createpost-su-15)) :route-name :createpost-r]
+                  ["/addsample" :post (conj common-interceptors (api/addsample-su-15)) :route-name :addsample-r]})
 
 (def routes
   (route/expand-routes baseroutes))
