@@ -20,25 +20,31 @@
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
-  (println "\nstarting... \n")
+  (println "\n -------------------------------------------------- \n")
   (reset! server
           (-> (assoc service-map ::http/join? false)
               http/create-server
               http/start))
-  (println "nice \n"))
+  (println "\n -------------------------------------------------- \n"))
 
 (defn stop-dev
   "stopping server"
   []
-  (println "\n stopping server ... \n")
+  (println "\n -------------------------------------------------- \n")
   (http/stop @server)
-  (println "nice \n\n"))
+  (println "\n -------------------------------------------------- \n"))
 
 (defn restart []
   (stop-dev)
   (start-dev))
 
 ;utils
+
+(defn samplepost "insert samples" []
+  (swap! api/database merge api/samplepost))
+
+(defn resetpost "reset data" []
+  (reset! api/database merge nil))
 
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))

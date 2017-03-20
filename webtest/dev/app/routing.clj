@@ -8,16 +8,11 @@
 
 (def common-interceptors [(bd/body-params) http/html-body])
 
-(def baseroutes #{["/" :get (conj common-interceptors api/landing-su-15) :route-name :landing-page]
-                  ["/home" :get (conj common-interceptors api/home-su-15) :route-name :home-page]
-                  ["/about" :get (conj [http/html-body] api/about-su-15) :route-name :about-page]
-                  #_["/new" :get [common-interceptors new-post]]
-                  #_["/ok" :post [common-interceptors create-post]]
-                  #_["/okedit/:postid" :post [common-interceptors edit-post-ok]]
-                  #_["/post/:postid" :get [common-interceptors view-post]]
-                  #_["/edit/:postid" :get [common-interceptors edit-post]]
-                  #_["/delete/:postid" :get [common-interceptors delete-post]]
-                  #_["/deleteok/:postid" :post [common-interceptors delete-post-ok]]})
+(def baseroutes #{["/" :get (conj common-interceptors (api/landing-su-15)) :route-name :landing-r]
+                  ["/postlist" :get (conj common-interceptors (api/postlist-su-15)) :route-name :postlist-r]
+                  ["/about" :get (conj common-interceptors (api/about-su-15)) :route-name :about-r]
+                  ["/createpost" :get (conj common-interceptors (api/createpost-su-15-get)) :route-name :createpost-rget]
+                  ["/createpost" :post (conj common-interceptors (api/createpost-su-15-post)) :route-name :createpost-rpost]})
 
 (def routes
   (route/expand-routes baseroutes))
