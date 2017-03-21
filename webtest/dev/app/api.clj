@@ -5,13 +5,6 @@
 (defonce database (atom nil))
 (defonce post-numbering (atom 1))
 
-(defn keymaker [num]
-  (cond
-   (= (count (str num)) 1) (keyword (str "000" num))
-   (= (count (str num)) 2) (keyword (str "00" num))
-   (= (count (str num)) 3) (keyword (str "0" num))
-   (= (count (str num)) 4) (keyword (str num))))
-
 (def samplepost {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
                  :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
                  :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}})
@@ -45,14 +38,13 @@
 
 (defn createpost-su-15 []
   (interceptor
-   {:name :create-get-sukhoi
+   {:name :create-sukhoi
     :enter
     (fn [context]
       (let [title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
-            post-num @post-numbering
-            post-num-key (keymaker post-num)]
-        (swap! database assoc post-num-key {:number post-num :title title :content content})
+            post-num (keyword (str @post-numbering))]
+        (swap! database assoc post-num {:number @post-numbering :title title :content content})
         (swap! post-numbering inc)
         (assoc context :response {:status 200 :body (mold/postlist-html @database)})))}))
 
@@ -71,5 +63,25 @@
     :enter
     (fn [context]
       (let [request (:request context)]
-        (swap! database merge samplepost)
+        #_(swap! database merge samplepost)
+        (swap! database assoc (keyword (str @post-numbering)) (:1 samplepost))
+        (swap! post-numbering inc)
+        (swap! database assoc (keyword (str @post-numbering)) (:2 samplepost))
+        (swap! post-numbering inc)
+        (swap! database assoc (keyword (str @post-numbering)) (:3 samplepost))
+        (swap! post-numbering inc)
         (assoc context :response {:status 200 :body (mold/postlist-html @database)})))}))
+
+(defn getpost-su-15 []
+  (interceptor
+   {:name :getpost-post
+    :enter
+    (fn [context]
+      (let [postid (get-in context [:request :path-params :postid])
+            postkey (keyword postid)
+            response {:status 200 :body (mold/getpost-html @database postkey postid)}]
+        (if (= (postkey @database) nil)
+          (assoc context :response {:status 404 :body (mold/not-found-html)})
+          (assoc context :response response))))}))
+
+(conj {} (find {:a "a" :b "b"} :a))

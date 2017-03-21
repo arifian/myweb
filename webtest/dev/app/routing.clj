@@ -13,7 +13,8 @@
                   ["/about" :get (conj common-interceptors (api/about-su-15)) :route-name :about-r]
                   ["/newpost" :get (conj common-interceptors (api/newpost-su-15)) :route-name :newpost-r]
                   ["/createpost" :post (conj common-interceptors (api/createpost-su-15)) :route-name :createpost-r]
-                  ["/addsample" :post (conj common-interceptors (api/addsample-su-15)) :route-name :addsample-r]})
+                  ["/addsample" :post (conj common-interceptors (api/addsample-su-15)) :route-name :addsample-r]
+                  ["/post/:postid" :get (conj common-interceptors (api/getpost-su-15)) :route-name :getpost-r]})
 
 (def routes
   (route/expand-routes baseroutes))
