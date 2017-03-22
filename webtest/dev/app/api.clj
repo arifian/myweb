@@ -84,4 +84,38 @@
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
-(conj {} (find {:a "a" :b "b"} :a))
+(defn editpage-su-15 []
+  (interceptor
+   {:name :editpage-post
+    :enter
+    (fn [context]
+      (let [postid (get-in context [:request :path-params :postid])
+            postkey (keyword postid)
+            response {:status 200 :body (mold/editpage-html @database postkey postid)}]
+        (if (= (postkey @database) nil)
+          (assoc context :response {:status 404 :body (mold/not-found-html)})
+          (assoc context :response response))))}))
+
+(defn submitedit-su-15 []
+  (interceptor
+   {:name :submitedit-sukhoi
+    :enter
+    (fn [context]
+      (let [postid (get-in context [:request :path-params :postid])
+            title (:title (:form-params (:request context)))
+            content (:content (:form-params (:request context)))
+            postkey (keyword postid)]
+        (swap! database assoc postkey {:number postid :title title :content content})
+        (assoc context :response {:status 200 :body (mold/postlist-html @database)})))}))
+
+(defn delete-su-15 []
+  (interceptor
+   {:name :delete-sukhoi
+    :enter
+    (fn [context]
+      (let [postid (get-in context [:request :path-params :postid])
+            postkey (keyword postid)]
+        (swap! database dissoc postkey)
+        (assoc context :response {:status 200 :body (mold/postlist-html @database)})))}))
+
+#_(conj {} (find {:a "a" :b "b"} :a))
