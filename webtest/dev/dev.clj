@@ -5,7 +5,8 @@
             [app.routing :as routing]
             [app.api :as api]
             [app.function :as foo]
-            [app.template :as mold]))
+            [app.template :as mold]
+            [app.db :as db]))
 
 #_(refresh) ;refresh ns
 
@@ -40,11 +41,12 @@
 
 ;utils
 
-(defn samplepost "insert samples" []
-  (swap! api/database merge api/samplepost))
+#_(defn samplepost "insert samples" []
+  (swap! db/database merge db/samplepost))
 
 (defn resetpost "reset data" []
-  (reset! api/database nil))
+  (reset! db/database nil)
+  (reset! db/post-numbering 1))
 
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))
