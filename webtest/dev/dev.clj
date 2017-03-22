@@ -46,7 +46,7 @@
 
 (defn resetpost "reset data" []
   (reset! db/database nil)
-  (reset! db/post-numbering 1))
+  #_(reset! db/post-numbering 1))
 
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))
