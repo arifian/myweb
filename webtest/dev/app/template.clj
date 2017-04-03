@@ -117,7 +117,7 @@
                 [:label {:for "content"} "Content:"]
                 [:textarea {:class "form-control" :rows "5" :id "content" :name "content" :required ""}]]
                [:button {:type "submit" :class "btn btn-primary"} "Submit"]]
-              [:div
+              #_[:div
                [:form {:action "/addsample" :method "post" :id "input-form"}
                 [:button {:type "submit" :class "btn btn-primary"} "Add Samples"]]]]]]))
 

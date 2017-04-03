@@ -56,7 +56,7 @@
             response {:status 200 :body (mold/newpost-html)}]
         (assoc context :response response)))}))
 
-(defn addsample-su-15 []
+#_(defn addsample-su-15 []
   (interceptor
    {:name :addsample-sukhoi
     :enter
