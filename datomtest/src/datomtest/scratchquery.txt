@@ -122,3 +122,80 @@ IN 2
  ["Predator" 7.8]
  ["Lethal Weapon 3" 6.6]
  ["RoboCop" 7.5]]
+
+=====================- params 2 -=======================
+
+What attributes are associated with a given movie.
+[:find ?attr
+ :in $ ?title
+ :where
+ [?p :movie/title ?title]
+ [?p ?a]
+ [?a :db/ident ?attr]]
+
+"Commando"
+
+====
+
+Find the names of all people associated with a particular movie (i.e. both the actors and the directors)
+[:find ?name
+ :in $ ?title [?attr ...]
+ :where
+ [?t :movie/title ?title]
+ [?t ?attr ?a]
+ [?a :person/name ?name]]
+
+"Die Hard"
+
+[:movie/cast :movie/director]
+
+====
+
+Find all available attributes, their type and their cardinality.
+This is essentially a query to find the schema of the database.
+To find all installed attributes you must use the :db.install/attribute attribute.
+You will also need to use the :db/valueType and :db/cardinality attributes as well as :db/ident.
+
+[:find ?attr ?type ?card
+ :where
+ [_ :db.install/attribute ?p]
+ [?p :db/valueType ?q]
+ [?p :db/cardinality ?r]
+ [?p :db/ident ?attr]
+ [?q :db/ident ?type]
+ [?r :db/ident ?card]]
+
+hasil:
+
+?attr	       ?type		?card
+:db/fn	       :db.type/fn	:db.cardinality/one
+:movie/year    :db.type/long	:db.cardinality/one
+:db/lang       :db.type/ref	:db.cardinality/one
+... 	       ... 		...
+
+======
+
+When was the seed data imported into the database? Grab the transaction of any datom in the database, e.g., [_ :movie/title _ ?tx] and work from there.
+
+[:find ?inst
+ :where
+ [_ :movie/title _ ?tx]
+ [?tx :db/txInstant ?inst]]
+
+?inst
+#inst "2017-04-04T14:54:35.350-00:00"
+
+================== predicates ===================
+
+Find movies older than a certain year (inclusive)
+
+[:find ?title 
+ :in $ ?year
+ :where
+ [?p :movie/title ?title]
+ [?p :movie/year ?y]
+ [(<= ?y ?year)]]
+
+1979
+
+====
