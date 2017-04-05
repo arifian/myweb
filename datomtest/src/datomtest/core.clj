@@ -56,9 +56,7 @@
                      :where
                      [?e :post/title _]]
                    db))
-
-;q-result
-
+                                        
 (defn testfirsttitle [] (:post/title (d/entity db (ffirst q-result))))
 
 (defn testfirstcontent [] (:post/title (d/entity db (ffirst q-result))))
