@@ -43,25 +43,45 @@
                   {:post/id (d/squuid)
                    :post/title "Second best post in the world"
                    :post/content "Ipsum Ingsun Dilema Labibade"
-                   :db/id (d/tempid :db.part/user)}
-                  ])
+                   :db/id (d/tempid :db.part/user)}])
+
+(defn add-post [title content] [{:post/id (d/squuid)
+                                 :post/title title
+                                 :post/content content
+                                 :db/id (d/tempid :db.part/user)}])
 
 @(d/transact conn blog-schema)
 
 @(d/transact conn first-posts)
 
+;@(d/transact conn (add-post "title" "content"))
+
 (def db (d/db conn))
 
-(def q-result (d/q '[:find ?e
-                     :where
-                     [?e :post/title _]]
+(defn getallpost [] (d/q '[:find ?id ?title ?content
+                    :where
+                    [?e :post/id ?id]
+                    [?e :post/title ?title]
+                    [?e :post/content ?content]]
                    db))
-                                        
-(defn testfirsttitle [] (:post/title (d/entity db (ffirst q-result))))
 
-(defn testfirstcontent [] (:post/title (d/entity db (ffirst q-result))))
+(defn postnth [id]
+  (d/q '[:find ?title ?content
+         :in $ ?id
+         :where
+         [?e :post/id ?id]
+         [?e :post/title ?title]
+         [?e :post/content ?content]]
+       db
+       id))
 
-;@(d/transact conn [[:db/add
-;                    (d/tempid :db.part/user)
-;                    :db/doc
-;                    "Hello world"]])
+(postnth #uuid "58e74990-21ff-4a6e-a09e-0453c964761d")
+
+(getallpost)
+;; => #{[#uuid "58e74990-21ff-4a6e-a09e-0453c964761d" "Second best post in the world" "Ipsum Ingsun Dilema Labibade"] [#uuid "58e74990-a937-46a6-8f39-c0f8273b2de8" "Best post in the world" "Ipsum Ingsun Dilema"]}
+
+#_(qnth )
+
+(:post/content (d/entity db (ffirst q-result)))
+
+
