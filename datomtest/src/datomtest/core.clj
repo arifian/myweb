@@ -56,28 +56,29 @@
 
 ;@(d/transact conn (add-post "title" "content"))
 
-(def db (d/db conn))
+#_(def db (d/db conn))
 
-(defn getallpost [] (d/q '[:find ?id ?title ?content
-                    :where
-                    [?e :post/id ?id]
-                    [?e :post/title ?title]
-                    [?e :post/content ?content]]
-                   db))
+(defn getallpost [dt]
+  (d/q '[:find ?id ?title ?content
+         :where
+         [?e :post/id ?id]
+         [?e :post/title ?title]
+         [?e :post/content ?content]]
+       (d/db (:conn dt))))
 
-(defn postnth [id]
+(defn postnth [dt id]
   (d/q '[:find ?title ?content
          :in $ ?id
          :where
          [?e :post/id ?id]
          [?e :post/title ?title]
          [?e :post/content ?content]]
-       db
+       (d/db (:conn dt))
        id))
 
-(postnth #uuid "58e74990-21ff-4a6e-a09e-0453c964761d")
+(postnth {:conn conn} #uuid "58e74990-21ff-4a6e-a09e-0453c964761d")
 
-(getallpost)
+(getallpost {:conn conn})
 ;; => #{[#uuid "58e74990-21ff-4a6e-a09e-0453c964761d" "Second best post in the world" "Ipsum Ingsun Dilema Labibade"] [#uuid "58e74990-a937-46a6-8f39-c0f8273b2de8" "Best post in the world" "Ipsum Ingsun Dilema"]}
 
 #_(qnth )

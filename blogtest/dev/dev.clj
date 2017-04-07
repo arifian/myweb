@@ -35,7 +35,7 @@
   (http/stop @server)
   (println "\n -------------------------------------------------- \n"))
 
-(defn restart []
+#_(defn restart []
   (stop-dev)
   (start-dev))
 

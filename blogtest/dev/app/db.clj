@@ -1,12 +1,26 @@
 (ns app.db)
 
-(def samplepost {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
-                 :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
-                 :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}})
+(def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
+                         :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
+                         :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}},
+                 :post-numbering 3})
 
 (defonce database (atom {:posts nil :post-numbering 1}))
 
-(defn getallpost [db] (:posts @db))
+(defn create-dt [_] (atom {:posts nil :post-numbering 1}))
+
+(defn initschema [_] _)
+
+(defn initcontent [dt] (reset! dt samplepost))
+
+(defn getallpost
+"#{{:id #uuid \"58e74990-21ff-4a6e-a09e-0453c964761d\"
+       :title \"Second best post in the world\"
+       :content \"Ipsum Ingsun Dilema Labibade\"}
+  {:id #uuid \"58e74990-a937-46a6-8f39-c0f8273b2de8\"
+     :title \"Best post in the world\"
+     :content \"Ipsum Ingsun Dilema\"}}"
+  [db] (:posts @db))
 
 (defn getcurrentpostnum [db] (get @db :post-numbering 1))
 

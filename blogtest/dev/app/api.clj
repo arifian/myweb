@@ -10,6 +10,10 @@
                  :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
                  :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}})
 
+(def dt (db/create-dt '_))
+(db/initschema dt)
+(db/initcontent dt)
+
 (defn landing-su-15 []
   (interceptor
    {:name :about-sukhoi
@@ -34,7 +38,7 @@
     :enter
     (fn [context]
       (let [request (:request context)
-            response {:status 200 :body (mold/postlist-html (db/getallpost db/database))}]
+            response {:status 200 :body (mold/postlist-html (db/getallpost dt))}]
         (assoc context :response response)))}))
 
 (defn createpost-su-15 []
@@ -44,8 +48,8 @@
     (fn [context]
       (let [title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))]
-        (db/assocpost db/database title content) 
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (db/assocpost dt title content) 
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost dt))})))}))
 
 (defn newpost-su-15 []
   (interceptor
@@ -72,8 +76,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/getpost-html (db/getallpost db/database) postkey postid)}]
-        (if (= (postkey (db/getallpost db/database)) nil)
+            response {:status 200 :body (mold/getpost-html (db/getallpost dt) postkey postid)}]
+        (if (= (postkey (db/getallpost dt)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -84,8 +88,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/editpage-html (db/getallpost db/database) postkey postid)}]
-        (if (= (postkey (db/getallpost db/database)) nil)
+            response {:status 200 :body (mold/editpage-html (db/getallpost dt) postkey postid)}]
+        (if (= (postkey (db/getallpost dt)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -98,9 +102,9 @@
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
             postkey (keyword postid)]
-        (db/assocedit db/database postkey postid title content)
+        (db/assocedit dt postkey postid title content)
         #_(swap! database assoc postkey {:number postid :title title :content content})
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost dt))})))}))
 
 (defn delete-su-15 []
   (interceptor
@@ -109,7 +113,7 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)]
-        (db/dissocpost db/database postkey)
+        (db/dissocpost dt postkey)
         #_(swap! database dissoc postkey)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost dt))})))}))
 
