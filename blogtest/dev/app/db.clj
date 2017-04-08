@@ -3,7 +3,7 @@
 (def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
                          :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
                          :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}},
-                 :post-numbering 3})
+                 :post-numbering 4})
 
 (defonce database (atom {:posts nil :post-numbering 1}))
 

@@ -9,18 +9,22 @@
                  :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
                  :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}})
 
-(defonce dbtype (atom nil))
+(defonce database (atom nil))
 
-(defn initdb
-  [dbkey] ;need improv
-  (cond
-    (= dbkey :da) (do (require '[app.db :as db]) (reset! dbtype :atom) (initatom))
-    (= dbkey :dt) (do (require '[app.datomic :as db])  (reset! dbtype :datomic) (initdatomic))
-    :else nil))
+(defonce datans (require '[app.db :as db]))
 
-(defn initatom [] (do (db/create-dt '_) (db/initschema db/database) (db/initcontent db/database)))
+(defn initatom
+  []
+  (reset! database (db/create-dt '_))
+  (db/initschema database)
+  (db/initcontent database))
 
-(defn initdatomic [] (do (db/scratch-conn) (db/initschema db/database) (db/initcontent db/database)))
+(defn initdatomic
+  []
+  (reset! datans (require '[app.datomic :as db]))
+  (reset! database (db/create-dt '_))
+  (db/initschema database)
+  (db/initcontent database))
 
 (defn landing-su-15 []
   (interceptor

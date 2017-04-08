@@ -1,6 +1,5 @@
 (ns app.datomic
-  (:require [datomic.api :as d]
-            [clojure.tools.namespace.repl :refer [refresh]]))
+  (:require [datomic.api :as d]))
 
 (def db-uri-base "datomic:mem://mbe")
 
@@ -14,7 +13,7 @@
 
 (def conn (scratch-conn))
 
-(def dt {:conn conn})
+(def database {:conn conn})
 
 #_(def db (d/db conn))
 
@@ -47,12 +46,16 @@
 
 (def first-posts
   [{:post/id (d/squuid)
-    :post/title "Best post in the world"
-    :post/content "Ipsum Ingsun Dilema"
+    :post/title "Ipsum One"
+    :post/content (slurp "resources/postsampletext/sampleone.txt")
     :db/id (d/tempid :db.part/user)}
    {:post/id (d/squuid)
-    :post/title "Second best post in the world"
-    :post/content "Ipsum Ingsun Dilema Labibade"
+    :post/title "Ipsum Two"
+    :post/content (slurp "resources/postsampletext/sampletwo.txt")
+    :db/id (d/tempid :db.part/user)}
+   {:post/id (d/squuid)
+    :post/title "Ipsum Three"
+    :post/content (slurp "resources/postsampletext/samplethree.txt")
     :db/id (d/tempid :db.part/user)}])
 
 (defn initcontent [dt] @(d/transact (:conn dt) first-posts))

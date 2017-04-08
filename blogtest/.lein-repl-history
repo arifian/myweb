@@ -117,3 +117,27 @@ dat/conn
 dat/conn
 dat/dt
 (dat/initschema dat/dt)
+(dev)
+(refresh)
+(initdb :db)
+(dev)
+(initdb :db)
+(refresh)
+(initdb :db)
+(start-dev)
+(stop-dev)
+(refresh)
+database
+(refresh)
+(initdb :dt)
+database
+(require '[app.datomic :as datom])
+datom/conn
+(def dt :dt)
+(def db :db)
+dt
+(dev)
+(str :a)
+((println "") (println "1"))
+(do (+ 1 1) (+ 2 2))
+(do (println "asdf") (+ 2 2))
