@@ -1,6 +1,6 @@
 # webtest
 
-Alfa web (no datomic)
+Web with datomic
 
 ## Usage
 

@@ -1,10 +1,11 @@
 # webtest
 
-Alfa web (no datomic)
+Proto for dual database (datomic + atom)
+Still fail
 
 ## Usage
 
-lein repl -> (dev) -> (start-dev)
+lein repl -> (dev)
 
 FIXME
 
