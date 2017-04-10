@@ -7,6 +7,13 @@
 
 #_(refresh) ;refresh ns
 
+(defn exitdev
+  []
+  "switch to user ns"
+  (println "\nloading user ns... \n")
+  (require 'user)
+  (in-ns 'user))
+
 (def service-map "declaring initial service map"
   {::http/routes routing/routes
    ::http/type   :jetty

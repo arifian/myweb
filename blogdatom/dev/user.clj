@@ -7,10 +7,18 @@
 
 (defn dev
   []
+  "switch to dev ns"
   (println "\nloading dev mode... \n")
   (require 'dev)
   (in-ns 'dev))
 
+(defn dbdev
+  []
+  "switch to datomic ns"
+  (println "\nloading datomic dev mode... \n")
+  (require 'dbdev)
+  (in-ns 'dbdev))
+
 (defn start-dev
   []
-  (println "Don't you mean (dev) then (start-dev) ?") "moron...")
+  (println "options : (dev) (dbdev)"))
