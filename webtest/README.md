@@ -1,6 +1,6 @@
 # webtest
 
-Alfa web (no datomic)
+Web using atom (with the datomic alpha ver)
 
 ## Usage
 

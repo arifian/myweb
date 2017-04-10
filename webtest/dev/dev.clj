@@ -3,10 +3,7 @@
             [io.pedestal.test :as test]
             [clojure.tools.namespace.repl :refer [refresh]]
             [app.routing :as routing]
-            [app.api :as api]
-            [app.function :as foo]
-            [app.template :as mold]
-            [app.db :as db]))
+            [app.api :as api]))
 
 #_(refresh) ;refresh ns
 
@@ -38,15 +35,6 @@
 (defn restart []
   (stop-dev)
   (start-dev))
-
-;utils
-
-#_(defn samplepost "insert samples" []
-  (swap! db/database merge db/samplepost))
-
-(defn resetpost "reset data" []
-  (reset! db/database nil)
-  #_(reset! db/post-numbering 1))
 
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))

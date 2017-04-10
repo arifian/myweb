@@ -88,7 +88,9 @@
 
              [:div {:class "container"}
               (if (empty? postlist)
-                [:div {:class "text-center"} "No Post Yet!" [:br][:br]]
+                [:div {:class "text-center"} "No Post Yet!" [:br][:br]
+                 [:form {:action "/addsample" :method "post" :id "input-form"}
+                  [:button {:type "submit" :class "btn btn-primary"} "Add Samples"]]]
                 [:div {:class "row"}
                  (foo/post-list (into (sorted-map) postlist))])]]]))
 
@@ -116,10 +118,7 @@
                [:div {:class "form-group"}
                 [:label {:for "content"} "Content:"]
                 [:textarea {:class "form-control" :rows "5" :id "content" :name "content" :required ""}]]
-               [:button {:type "submit" :class "btn btn-primary"} "Submit"]]
-              #_[:div
-               [:form {:action "/addsample" :method "post" :id "input-form"}
-                [:button {:type "submit" :class "btn btn-primary"} "Add Samples"]]]]]]))
+               [:button {:type "submit" :class "btn btn-primary"} "Submit"]]]]]))
 
 
 (defn getpost-html [post postid postkey]
