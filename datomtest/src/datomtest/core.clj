@@ -56,15 +56,17 @@
 
 ;@(d/transact conn (add-post "title" "content"))
 
-#_(def db (d/db conn))
+(def db (d/db conn))
 
-(defn getallpost [dt]
+(defn getallpost []
   (d/q '[:find ?id ?title ?content
          :where
          [?e :post/id ?id]
          [?e :post/title ?title]
          [?e :post/content ?content]]
-       (d/db (:conn dt))))
+       (d/db conn)))
+
+(getallpost)
 
 (defn postnth [dt id]
   (d/q '[:find ?title ?content
@@ -83,6 +85,6 @@
 
 #_(qnth )
 
-(:post/content (d/entity db (ffirst q-result)))
+#_(:post/content (d/entity db (ffirst q-result)))
 
 

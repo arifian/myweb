@@ -1,5 +1,5 @@
 (ns dbdev
-  (:require [app.datomic :as db]
+  (:require [app.datomic :refer :all]
             [clojure.tools.namespace.repl :refer [refresh]]))
 
 (defn exitdbdev

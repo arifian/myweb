@@ -1,27 +1,19 @@
 (ns app.datomic
   (:require [datomic.api :as d]))
 
-(defonce db-uri-base "datomic:mem://mbe")
-
-(defonce dbsquid (d/squuid))
+(def db-uri-base "datomic:mem://")
 
 (defn scratch-conn
   "Create a connection to an anonymous, in-memory database."
   []
-  (let [uri (str db-uri-base dbsquid)]
+  (let [uri (str db-uri-base (d/squuid))]
     (d/delete-database uri)
     (d/create-database uri)
     (d/connect uri)))
 
-(defn stop []
-  (let [uri (str db-uri-base dbsquid)]
-    (d/delete-database uri)))
-
 (def conn (scratch-conn))
 
 (def database {:conn conn})
-
-#_(def db (d/db conn))
 
 (def blog-schema 
   [{:db/ident :post/id
@@ -66,6 +58,10 @@
 
 (defn initcontent [dt] @(d/transact (:conn dt) first-posts))
 
+(defn initdb [dt]
+  (initschema dt)
+  (initcontent dt))
+
 (defn getallpost [dt]
   (d/q '[:find ?id ?title ?content
          :where
@@ -74,6 +70,13 @@
          [?e :post/content ?content]]
        (d/db (:conn dt))))
 
+(def getall (getallpost database))
+
+(defn transformit [posts]
+  (assoc {} :number (posts 0) :title (posts 1) :content (posts 2)))
+
+#_(map transformit getall)
+
 (defn scratchaddpost [title content]
   [{:post/id (d/squuid)
     :post/title title
@@ -81,15 +84,3 @@
     :db/id (d/tempid :db.part/user)}])
 
 (defn addpost [dt title content] @(d/transact (:conn dt) (scratchaddpost title content)))
-
-(defn getallpost [db] nil)
-
-(defn getcurrentpostnum [db] nil)
-
-(defn inc-post-numbering [db] nil)
-
-(defn assocpost [db title content] nil)
-
-(defn assocedit [db postkey postid title content] nil)
-
-(defn dissocpost [db postkey] nil)
