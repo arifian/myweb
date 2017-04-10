@@ -1,4 +1,4 @@
-(ns app.db)
+(ns app.atom)
 
 (def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
                          :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
@@ -13,17 +13,25 @@
 
 (defn inc-post-numbering [db] (swap! db update-in [:post-numbering] inc))
 
-(defn assocpost [db title content]
+(defn dec-post-numbering [db] (swap! db update-in [:post-numbering] dec))
+
+(defn addpost [db title content]
   (swap! db update-in [:posts]
          assoc (keyword (str (getcurrentpostnum db))) {:number (getcurrentpostnum db) :title title :content content})
   (inc-post-numbering db))
 
-(defn assocedit [db postkey postid title content]
+(defn addsample [db]
+  (addpost db "Lorem Ipsum #1" (slurp "resources/postsampletext/sampleone.txt"))
+  (addpost db "Lorem Ipsum #2" (slurp "resources/postsampletext/sampletwo.txt"))
+  (addpost db "Lorem Ipsum #3" (slurp "resources/postsampletext/samplethree.txt")))
+
+(defn editpost [db postkey postid title content]
   (swap! db update-in [:posts]
          assoc postkey {:number postid :title title :content content}))
 
-(defn dissocpost [db postkey]
-  (swap! db update-in [:posts] dissoc postkey))
+(defn removepost [db postkey]
+  (swap! db update-in [:posts] dissoc postkey)
+  (dec-post-numbering db))
 
 #_(defn addsample [db] 
   (swap! db assoc (keyword (str @post-numbering)) (:1 samplepost))

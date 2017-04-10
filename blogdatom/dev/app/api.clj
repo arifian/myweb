@@ -1,14 +1,9 @@
 (ns app.api
   (:require [io.pedestal.interceptor :refer [interceptor]]
             [app.template :as mold]
-            [app.db :as db]))
+            [app.atom :as db]))
 
-#_(defonce database (atom nil))
-#_(defonce post-numbering (atom 1))
-
-#_(def samplepost {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
-                 :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
-                 :3 {:number 3 :title "Lorem Ipsum #3" :content (slurp "resources/postsampletext/samplethree.txt")}})
+;;interceptor
 
 (defn landing-su-15 []
   (interceptor
@@ -44,7 +39,7 @@
     (fn [context]
       (let [title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))]
-        (db/assocpost db/database title content) 
+        (db/addpost db/database title content) 
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
 
 (defn newpost-su-15 []
@@ -56,13 +51,13 @@
             response {:status 200 :body (mold/newpost-html)}]
         (assoc context :response response)))}))
 
-#_(defn addsample-su-15 []
+(defn addsample-su-15 []
   (interceptor
    {:name :addsample-sukhoi
     :enter
     (fn [context]
       (let [request (:request context)]
-        #_(db/addsample)
+        (db/addsample db/database)
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
 
 (defn getpost-su-15 []
@@ -98,8 +93,7 @@
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
             postkey (keyword postid)]
-        (db/assocedit db/database postkey postid title content)
-        #_(swap! database assoc postkey {:number postid :title title :content content})
+        (db/editpost db/database postkey postid title content)
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
 
 (defn delete-su-15 []
@@ -109,7 +103,6 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)]
-        (db/dissocpost db/database postkey)
-        #_(swap! database dissoc postkey)
+        (db/removepost db/database postkey)
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
 

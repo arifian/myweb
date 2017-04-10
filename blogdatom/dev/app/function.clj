@@ -5,7 +5,7 @@
     [:div {:class "col-sm-4"}
      [:p (str "Post #" (:number (key post)))]
      [:a {:href (str "/post/" (:number (key post)))} [:h3 (str (:title (key post)))]]
-     [:p (str (:content (key post)))[:hr][:br][:br]]]))
+     [:p (str (:content (key post)))[:br]]]))
 
 (defn bootstrap []
   (for [cnt (range 4)]

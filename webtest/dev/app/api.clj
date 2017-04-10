@@ -1,7 +1,7 @@
 (ns app.api
   (:require [io.pedestal.interceptor :refer [interceptor]]
             [app.template :as mold]
-            [app.db :as db]))
+            [app.atom :as db]))
 
 #_(defonce database (atom nil))
 #_(defonce post-numbering (atom 1))

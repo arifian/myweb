@@ -3,10 +3,7 @@
             [io.pedestal.test :as test]
             [clojure.tools.namespace.repl :refer [refresh]]
             [app.routing :as routing]
-            [app.api :as api]
-            [app.function :as foo]
-            [app.template :as mold]
-            [app.db :as db]))
+            [app.api :as api]))
 
 #_(refresh) ;refresh ns
 
