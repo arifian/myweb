@@ -19,16 +19,18 @@
 
 (defn initdb
   "init which type of database to use. :dt for datomic. :da for atom"
-  [dbkey]
-  (api/initdb dbkey)
-  (println "current db " (str api/dbtype)))
+  ([]
+   (println "current db " (str @api/dbtype)))
+  ([dbkey]
+   (api/initdb dbkey)
+   (println "current db " (str @api/dbtype))))
 
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
   (println "\n -------------------------------------------------- \n")
-  (if (nil? database)
-    "init the database first"
+  (if (nil? @api/dbtype)
+    "init the database first /n"
     (reset! server
             (-> (assoc service-map ::http/join? false)
                 http/create-server
@@ -40,7 +42,7 @@
   []
   (println "\n -------------------------------------------------- \n")
   (http/stop @server)
-  (reset! database nil)
+  (api/stopdb)
   (println "\n -------------------------------------------------- \n"))
 
 #_(defn restart []

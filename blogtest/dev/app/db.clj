@@ -7,6 +7,8 @@
 
 (defonce database (atom {:posts nil :post-numbering 1}))
 
+(defn stop [] (reset! database {:posts nil :post-numbering 1}))
+
 (defn create-dt [_] (atom {:posts nil :post-numbering 1}))
 
 (defn initschema [_] _)

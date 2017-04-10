@@ -1,15 +1,21 @@
 (ns app.datomic
   (:require [datomic.api :as d]))
 
-(def db-uri-base "datomic:mem://mbe")
+(defonce db-uri-base "datomic:mem://mbe")
+
+(defonce dbsquid (d/squuid))
 
 (defn scratch-conn
   "Create a connection to an anonymous, in-memory database."
   []
-  (let [uri (str db-uri-base (d/squuid))]
+  (let [uri (str db-uri-base dbsquid)]
     (d/delete-database uri)
     (d/create-database uri)
     (d/connect uri)))
+
+(defn stop []
+  (let [uri (str db-uri-base dbsquid)]
+    (d/delete-database uri)))
 
 (def conn (scratch-conn))
 

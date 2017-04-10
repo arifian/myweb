@@ -1,6 +1,8 @@
 (ns app.api
   (:require [io.pedestal.interceptor :refer [interceptor]]
-            [app.template :as mold]))
+            [app.template :as mold]
+            [app.db :as atomdb]
+            [app.datomic :as datomdb]))
 
 #_(defonce database (atom nil))
 #_(defonce post-numbering (atom 1))
@@ -11,16 +13,68 @@
 
 (defonce dbtype (atom nil))
 
+(defn initatom []
+  (do
+    (atomdb/create-dt '_)
+    (atomdb/initschema atomdb/database)
+    (atomdb/initcontent atomdb/database)))
+(defn stopatom [] (atomdb/stop))
+
+(defn initdatomic []
+  (do
+    (datomdb/scratch-conn)
+    (datomdb/initschema datomdb/database)
+    (datomdb/initcontent datomdb/database)))
+(defn stopdatomic [] (datomdb/stop))
+
 (defn initdb
-  [dbkey] ;need improv
+  [dbkey] 
   (cond
-    (= dbkey :da) (do (require '[app.db :as db]) (reset! dbtype :atom) (initatom))
-    (= dbkey :dt) (do (require '[app.datomic :as db])  (reset! dbtype :datomic) (initdatomic))
+    (= dbkey :da) (do (reset! dbtype :atom) (initatom))
+    (= dbkey :dt) (do (reset! dbtype :datomic) (initdatomic))
     :else nil))
 
-(defn initatom [] (do (db/create-dt '_) (db/initschema db/database) (db/initcontent db/database)))
+(defn stopdb []
+  (cond
+    (= @dbtype :atom) (do (stopatom) (reset! dbtype nil))
+    (= @dbtype :datomic) (do (stopdatomic) (reset! dbtype :nil))
+    :else nil))
 
-(defn initdatomic [] (do (db/scratch-conn) (db/initschema db/database) (db/initcontent db/database)))
+(def db 
+  (cond
+    (= @dbtype :atom) atomdb/database
+    (= @dbtype :datomic) datomdb/database
+    :else nil))
+
+(defn getallpost
+  [db]
+  (cond
+    (= @dbtype :atom) (atomdb/getallpost db)
+    (= @dbtype :datomic) (datomdb/getallpost db)
+    :else nil))
+
+(defn assocpost
+  [db title content]
+  (cond
+    (= @dbtype :atom) (atomdb/assocpost db title content)
+    (= @dbtype :datomic) (datomdb/assocpost db title content)
+    :else nil))
+
+(defn assocedit
+  [db postkey postid title content]
+  (cond
+    (= @dbtype :atom) (atomdb/assocedit db postkey postid title content)
+    (= @dbtype :datomic) (datomdb/assocedit db postkey postid title content)
+    :else nil))
+
+(defn dissocpost
+  [db postkey]
+  (cond
+    (= @dbtype :atom) (atomdb/dissocpost db postkey)
+    (= @dbtype :datomic) (datomdb/dissocpost db postkey)
+    :else nil))
+
+                                        ;==> interceptor
 
 (defn landing-su-15 []
   (interceptor
@@ -46,7 +100,7 @@
     :enter
     (fn [context]
       (let [request (:request context)
-            response {:status 200 :body (mold/postlist-html (db/getallpost database))}]
+            response {:status 200 :body (mold/postlist-html (getallpost db))}]
         (assoc context :response response)))}))
 
 (defn createpost-su-15 []
@@ -56,8 +110,8 @@
     (fn [context]
       (let [title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))]
-        (db/assocpost database title content) 
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+        (assocpost db title content) 
+        (assoc context :response {:status 200 :body (mold/postlist-html (getallpost db))})))}))
 
 (defn newpost-su-15 []
   (interceptor
@@ -68,15 +122,6 @@
             response {:status 200 :body (mold/newpost-html)}]
         (assoc context :response response)))}))
 
-#_(defn addsample-su-15 []
-  (interceptor
-   {:name :addsample-sukhoi
-    :enter
-    (fn [context]
-      (let [request (:request context)]
-        #_(db/addsample)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
-
 (defn getpost-su-15 []
   (interceptor
    {:name :getpost-sukhoi
@@ -84,8 +129,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/getpost-html (db/getallpost database) postkey postid)}]
-        (if (= (postkey (db/getallpost database)) nil)
+            response {:status 200 :body (mold/getpost-html (getallpost db) postkey postid)}]
+        (if (= (postkey (getallpost db)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -96,8 +141,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/editpage-html (db/getallpost database) postkey postid)}]
-        (if (= (postkey (db/getallpost database)) nil)
+            response {:status 200 :body (mold/editpage-html (getallpost db) postkey postid)}]
+        (if (= (postkey (getallpost db)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -110,9 +155,9 @@
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
             postkey (keyword postid)]
-        (db/assocedit database postkey postid title content)
-        #_(swap! database assoc postkey {:number postid :title title :content content})
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+        (assocedit db postkey postid title content)
+        #_(swap! db assoc postkey {:number postid :title title :content content})
+        (assoc context :response {:status 200 :body (mold/postlist-html (getallpost db))})))}))
 
 (defn delete-su-15 []
   (interceptor
@@ -121,7 +166,6 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)]
-        (db/dissocpost database postkey)
-        #_(swap! database dissoc postkey)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
-
+        (dissocpost db postkey)
+        #_(swap! db dissoc postkey)
+        (assoc context :response {:status 200 :body (mold/postlist-html (getallpost db))})))}))

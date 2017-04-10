@@ -136,8 +136,3 @@ datom/conn
 (def dt :dt)
 (def db :db)
 dt
-(dev)
-(str :a)
-((println "") (println "1"))
-(do (+ 1 1) (+ 2 2))
-(do (println "asdf") (+ 2 2))
