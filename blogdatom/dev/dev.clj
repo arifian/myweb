@@ -39,15 +39,6 @@
   (stop-dev)
   (start-dev))
 
-;utils
-
-#_(defn samplepost "insert samples" []
-  (swap! db/database merge db/samplepost))
-
-(defn resetpost "reset data" []
-  (reset! db/database nil)
-  #_(reset! db/post-numbering 1))
-
 (defn test-request "route testing repl function" [verb url]
   (io.pedestal.test/response-for (::http/service-fn @server) verb url))
 
