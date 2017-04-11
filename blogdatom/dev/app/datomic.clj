@@ -86,15 +86,16 @@
 (defn addpost [dt title content]
   @(d/transact (:conn dt) (scratchaddpost title content)))
 
-#_(defn q-post-single
+(defn q-post-single
   [dt squuid]
   "return entity id"
-  (d/q '[:find ?e
-         :in $ ?squuid
-         :where
-         [?e :post/id ?squuid]]
-       (d/db (:conn dt))
-       squuid))
+  (((apply vector
+         (d/q '[:find ?e
+                :in $ ?squuid
+                :where
+                [?e :post/id ?squuid]]
+              (d/db (:conn dt))
+              squuid))0)0))
 
 (defn scratcheditpost [squuid title content]
   [{:post/id squuid
@@ -105,4 +106,15 @@
 (defn editpost [dt postkey postid title content]
   @(d/transact (:conn dt) (scratcheditpost (default-uuid-reader postid) title content)))
 
-(defn removepost [db postkey] '_)
+#_@(d/transact
+  conn
+  [[:db/add (d/tempid :db.part/user)
+    :db/doc "Hello world"]])
+
+#_(defn scratchremovepost [squuid] '_)
+
+(defn scratchremovepost [dt squuid]
+  [[:db.fn/retractEntity (q-post-single dt squuid)]])
+
+(defn removepost [dt postid]
+  @(d/transact (:conn dt) (scratchremovepost dt (default-uuid-reader postid))))

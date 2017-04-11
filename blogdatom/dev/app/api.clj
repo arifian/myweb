@@ -103,8 +103,7 @@
    {:name :delete-sukhoi
     :enter
     (fn [context]
-      (let [postid (get-in context [:request :path-params :postid])
-            postkey (keyword postid)]
-        (db/removepost db/database postkey)
+      (let [postid (get-in context [:request :path-params :postid])]
+        (db/removepost db/database postid)
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
 

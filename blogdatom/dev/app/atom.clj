@@ -29,7 +29,7 @@
   (swap! db update-in [:posts]
          assoc postkey {:number postid :title title :content content}))
 
-(defn removepost [db postkey]
+#_(defn removepost [db postkey]
   (swap! db update-in [:posts] dissoc postkey)
   (dec-post-numbering db))
 
