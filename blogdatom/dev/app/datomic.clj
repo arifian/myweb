@@ -56,13 +56,9 @@
     :post/content (slurp "resources/postsampletext/samplethree.txt")
     :db/id (d/tempid :db.part/user)}])
 
-(defn initcontent [dt] @(d/transact (:conn dt) first-posts))
+(defn addsample [dt] @(d/transact (:conn dt) first-posts))
 
-(defn initdb [dt]
-  (initschema dt)
-  (initcontent dt))
-
-(defn getallpost [dt]
+(defn q-allpost [dt]
   (d/q '[:find ?id ?title ?content
          :where
          [?e :post/id ?id]
@@ -70,12 +66,10 @@
          [?e :post/content ?content]]
        (d/db (:conn dt))))
 
-(def getall (getallpost database))
+(defn transformit [post]
+  (assoc {} (keyword (str (post 0))) {:number (post 0) :title (post 1) :content (post 2)}))
 
-(defn transformit [posts]
-  (assoc {} :number (posts 0) :title (posts 1) :content (posts 2)))
-
-#_(map transformit getall)
+(defn getallpost [dt] (into (sorted-map) (map transformit (q-allpost dt))))
 
 (defn scratchaddpost [title content]
   [{:post/id (d/squuid)
@@ -84,3 +78,19 @@
     :db/id (d/tempid :db.part/user)}])
 
 (defn addpost [dt title content] @(d/transact (:conn dt) (scratchaddpost title content)))
+
+(defn q-post-single [dt squuid]
+  (d/q '[:find ?e
+         :in $ ?squuid
+         :where
+         [?e :post/id ?squuid]]
+       (d/db (:conn dt))
+       squuid))
+
+(defn editpost [db postkey postid title content]
+  (swap! db update-in [:posts]
+         assoc postkey {:number postid :title title :content content}))
+
+(defn editpost [dt postkey postid title content] '_)
+
+(defn removepost [db postkey] '_)

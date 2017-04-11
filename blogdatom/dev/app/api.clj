@@ -1,7 +1,9 @@
 (ns app.api
   (:require [io.pedestal.interceptor :refer [interceptor]]
             [app.template :as mold]
-            [app.atom :as db]))
+            [app.datomic :as db]))
+
+(defn initdb [] (db/initschema db/database))
 
 ;;interceptor
 
