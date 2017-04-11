@@ -1,6 +1,10 @@
 (ns app.datomic
   (:require [datomic.api :as d]))
 
+(defn- default-uuid-reader [form]
+  {:pre [(string? form)]}
+  (java.util.UUID/fromString form))
+
 (def db-uri-base "datomic:mem://")
 
 (defn scratch-conn
@@ -14,6 +18,8 @@
 (def conn (scratch-conn))
 
 (def database {:conn conn})
+
+#_(defn touuid [id] ([uuid id] 0))
 
 (def blog-schema 
   [{:db/ident :post/id
@@ -77,9 +83,12 @@
     :post/content content
     :db/id (d/tempid :db.part/user)}])
 
-(defn addpost [dt title content] @(d/transact (:conn dt) (scratchaddpost title content)))
+(defn addpost [dt title content]
+  @(d/transact (:conn dt) (scratchaddpost title content)))
 
-(defn q-post-single [dt squuid]
+#_(defn q-post-single
+  [dt squuid]
+  "return entity id"
   (d/q '[:find ?e
          :in $ ?squuid
          :where
@@ -87,10 +96,13 @@
        (d/db (:conn dt))
        squuid))
 
-(defn editpost [db postkey postid title content]
-  (swap! db update-in [:posts]
-         assoc postkey {:number postid :title title :content content}))
+(defn scratcheditpost [squuid title content]
+  [{:post/id squuid
+    :post/title title
+    :post/content content
+    :db/id (d/tempid :db.part/user)}])
 
-(defn editpost [dt postkey postid title content] '_)
+(defn editpost [dt postkey postid title content]
+  @(d/transact (:conn dt) (scratcheditpost (default-uuid-reader postid) title content)))
 
 (defn removepost [db postkey] '_)

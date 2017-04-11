@@ -30,7 +30,6 @@
           (-> (assoc service-map ::http/join? false)
               http/create-server
               http/start))
-  (println "\n -------------------------------------------------- \n")
   (api/initdb)
   (println "\n ------------------------schemainitialized-------------------------- \n"))
 
@@ -39,6 +38,7 @@
   []
   (println "\n -------------------------------------------------- \n")
   (http/stop @server)
+  (reset! server (atom nil))
   (println "\n -------------------------------------------------- \n"))
 
 (defn restart []
