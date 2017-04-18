@@ -1,11 +1,10 @@
 # webtest
 
-Proto for dual database (datomic + atom)
-Still fail
+Web with datomic
 
 ## Usage
 
-lein repl -> (dev)
+lein repl -> (dev) -> (start-dev)
 
 FIXME
 

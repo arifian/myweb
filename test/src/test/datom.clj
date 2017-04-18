@@ -1,5 +1,13 @@
-(ns app.datomic
-  (:require [datomic.api :as d]))
+(ns test.datom
+  (:require [datomic.api :as d]
+            [clojure.tools.namespace.repl :refer [refresh]]))
+
+(defn exit
+  []
+  "switch to test.clj ns"
+  (println "\nloading test.core mode... \n")
+  (require 'test.core)
+  (in-ns 'test.core))
 
 (defn- default-uuid-reader [form]
   {:pre [(string? form)]}

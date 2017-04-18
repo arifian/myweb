@@ -10,4 +10,4 @@
   {:dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]]
          :source-paths ["src"]}
    :test {:source-paths []}}
-  :main datomtest.core)
+  :main test.core)

@@ -1,6 +1,6 @@
 # datomtest
 
-Datomic test
+Datomic & various tinkering
 
 ## Usage
 
