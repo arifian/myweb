@@ -1,10 +1,12 @@
 # datomtest
 
-Datomic & various tinkering
+Datomic & various
+
+abstraction : credits to http://www.braveclojure.com/multimethods-records-protocols/
 
 ## Usage
 
-FIXME
+lein repl
 
 ## License
 

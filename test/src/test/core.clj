@@ -12,9 +12,9 @@
   (require 'test.datom)
   (in-ns 'datom))
 
-(defn protocol
+(defn abstractions
   []
-  "switch to protocol.clj ns"
-  (println "\nloading test.protocol mode... \n")
-  (require 'test.protocol)
-  (in-ns 'protocol))
+  "switch to abstractions.clj ns"
+  (println "\nloading test.abstractions mode... \n")
+  (require 'test.abstractions)
+  (in-ns 'abstractions))
