@@ -31,6 +31,7 @@
               http/create-server
               http/start))
   (api/initdb)
+  (api/createschema)
   (println "\n ------------------------schemainitialized-------------------------- \n"))
 
 (defn stop-dev

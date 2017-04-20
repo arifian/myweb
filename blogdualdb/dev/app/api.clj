@@ -3,7 +3,13 @@
             [app.template :as mold]
             [app.datomic :as db]))
 
-(defn initdb [] (db/initschema db/database))
+(defn initdb []
+  (db/createdb "kambing"))
+
+(def database (initdb))
+
+(defn createschema []
+  (db/initschema database))
 
 ;;interceptor
 
@@ -31,7 +37,7 @@
     :enter
     (fn [context]
       (let [request (:request context)
-            response {:status 200 :body (mold/postlist-html (db/getallpost db/database))}]
+            response {:status 200 :body (mold/postlist-html (db/getallpost database))}]
         (assoc context :response response)))}))
 
 (defn createpost-su-15 []
@@ -41,8 +47,8 @@
     (fn [context]
       (let [title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))]
-        (db/addpost db/database title content) 
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (db/addpost database title content) 
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
 
 (defn newpost-su-15 []
   (interceptor
@@ -59,8 +65,8 @@
     :enter
     (fn [context]
       (let [request (:request context)]
-        (db/addsample db/database)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (db/addsample database)
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
 
 (defn getpost-su-15 []
   (interceptor
@@ -69,8 +75,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/getpost-html (db/getallpost db/database) postkey postid)}]
-        (if (= (postkey (db/getallpost db/database)) nil)
+            response {:status 200 :body (mold/getpost-html (db/getallpost database) postkey postid)}]
+        (if (= (postkey (db/getallpost database)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -81,8 +87,8 @@
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])
             postkey (keyword postid)
-            response {:status 200 :body (mold/editpage-html (db/getallpost db/database) postkey postid)}]
-        (if (= (postkey (db/getallpost db/database)) nil)
+            response {:status 200 :body (mold/editpage-html (db/getallpost database) postkey postid)}]
+        (if (= (postkey (db/getallpost database)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -95,8 +101,8 @@
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
             postkey (keyword postid)]
-        (db/editpost db/database postkey postid title content)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (db/editpost database postkey postid title content)
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
 
 (defn delete-su-15 []
   (interceptor
@@ -104,6 +110,6 @@
     :enter
     (fn [context]
       (let [postid (get-in context [:request :path-params :postid])]
-        (db/removepost db/database postid)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost db/database))})))}))
+        (db/removepost database postid)
+        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
 

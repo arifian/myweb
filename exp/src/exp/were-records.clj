@@ -1,4 +1,4 @@
-(ns were-records)
+(ns exp.were-records)
 
 (defrecord WereWolf [name title])
 

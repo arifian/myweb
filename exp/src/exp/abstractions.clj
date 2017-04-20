@@ -1,14 +1,14 @@
-(ns test.abstractions
+(ns exp.abstractions
   (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [test.were_records :refer [WereWolf]])
-  (:import [were_records WereWolf]))
+            [exp.were-records :refer :all])
+  (:import [exp.were_records WereWolf]))
 
-(defn exit
+(defn back
   []
   "switch to test.clj ns"
   (println "\nloading test.core mode... \n")
-  (require 'test.core)
-  (in-ns 'test.core))
+  (require 'exp.core)
+  (in-ns 'exp.core))
 
 ;;;records
 

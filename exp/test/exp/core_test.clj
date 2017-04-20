@@ -1,6 +1,6 @@
-(ns datomtest.core-test
+(ns exp.core-test
   (:require [clojure.test :refer :all]
-            [datomtest.core :refer :all]))
+            [exp.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

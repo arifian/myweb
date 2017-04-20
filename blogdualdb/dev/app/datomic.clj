@@ -5,19 +5,21 @@
   {:pre [(string? form)]}
   (java.util.UUID/fromString form))
 
-(def db-uri-base "datomic:mem://")
+(defn createdb [name]
+  (let [uri (str "datomic:mem://" name)]
+    #_(d/delete-database uri)
+    (d/create-database uri)
+    {:conn (d/connect uri)}))
 
 (defn scratch-conn
   "Create a connection to an anonymous, in-memory database."
   []
-  (let [uri (str db-uri-base (d/squuid))]
+  (let [uri (str (createdb))]
     (d/delete-database uri)
     (d/create-database uri)
     (d/connect uri)))
 
-(def conn (scratch-conn))
-
-(def database {:conn conn})
+#_(def conn (scratch-conn))
 
 #_(defn touuid [id] ([uuid id] 0))
 

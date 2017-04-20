@@ -1,12 +1,10 @@
-# datomtest
+# exp
 
-Datomic & various
-
-abstraction : credits to http://www.braveclojure.com/multimethods-records-protocols/
+A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-lein repl
+FIXME
 
 ## License
 
