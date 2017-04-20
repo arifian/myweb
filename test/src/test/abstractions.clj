@@ -1,5 +1,7 @@
 (ns test.abstractions
-  (:require [clojure.tools.namespace.repl :refer [refresh]]))
+  (:require [clojure.tools.namespace.repl :refer [refresh]]
+            [test.were_records :refer [WereWolf]])
+  (:import [were_records WereWolf]))
 
 (defn exit
   []
@@ -8,6 +10,19 @@
   (require 'test.core)
   (in-ns 'test.core))
 
+;;;records
+
+(WereWolf. "David" "London Tourist")
+
+(def jacob (->WereWolf "Jacob" "Lead Shirt Discarder"))
+(.name jacob) 
+; => "Jacob"
+
+(:name jacob) 
+; => "Jacob"
+
+(get jacob :name) 
+; => "Jacob"
 
 
 ;;;;;; protocol
