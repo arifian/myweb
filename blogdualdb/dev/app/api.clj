@@ -1,10 +1,12 @@
 (ns app.api
   (:require [io.pedestal.interceptor :refer [interceptor]]
             [app.template :as mold]
-            [app.datomic :as db]))
+            [app.atom :as atm]
+            [app.datomic :as dtm]
+            [app.db :as db]))
 
 (defn initdb []
-  (db/createdb "kambing"))
+  (dtm/createdb "kambing"))
 
 (def database (initdb))
 

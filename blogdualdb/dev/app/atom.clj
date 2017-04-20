@@ -1,4 +1,5 @@
-(ns app.atom)
+(ns app.atom
+  (:require [app.db :as adb]))
 
 (def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
                          :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
@@ -7,7 +8,7 @@
 
 (defonce database (atom {:posts nil :post-numbering 1}))
 
-(defn createdb [name] {:db (atom {:posts nil :post-numbering 1})})
+(defrecord AtomDatabase [db])
 
 (defn initschema [dt] dt)
 
@@ -46,3 +47,21 @@
   (swap! post-numbering inc)
   (swap! (:db db) assoc (keyword (str @post-numbering)) (:3 samplepost))
   (swap! post-numbering inc))
+
+
+(extend-type AtomDatabase
+  adb/BlogDatabase
+  (-initschema [dt]
+    (initschema dt))
+  (-getallpost [db]
+    (getallpost db))
+  (-addpost [db title content]
+    (addpost db title content))
+  (-addsample [db]
+    (addsample db))
+  (-editpost [db postkey postid title content]
+    (editpost db postkey postid title content))
+  (-removepost [db postkey]
+    (removepost db postkey)))
+
+(defn createdb [name] (AtomDatabase. (atom {:posts nil :post-numbering 1})))

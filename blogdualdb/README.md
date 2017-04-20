@@ -1,6 +1,6 @@
 # webtest
 
-Web with datomic (@advanced)
+Web with datomic & atom (@advanced)
 
 ## Usage
 

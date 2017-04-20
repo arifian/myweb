@@ -1,23 +1,12 @@
 (ns app.datomic
-  (:require [datomic.api :as d]))
+  (:require [datomic.api :as d]
+            [app.db :as adb]))
 
 (defn- default-uuid-reader [form]
   {:pre [(string? form)]}
   (java.util.UUID/fromString form))
 
-(defn createdb [name]
-  (let [uri (str "datomic:mem://" name)]
-    #_(d/delete-database uri)
-    (d/create-database uri)
-    {:conn (d/connect uri)}))
-
-(defn scratch-conn
-  "Create a connection to an anonymous, in-memory database."
-  []
-  (let [uri (str (createdb))]
-    (d/delete-database uri)
-    (d/create-database uri)
-    (d/connect uri)))
+(defrecord DatomicDatabase [conn])
 
 #_(def conn (scratch-conn))
 
@@ -120,3 +109,39 @@
 
 (defn removepost [dt postid]
   @(d/transact (:conn dt) (scratchremovepost dt (default-uuid-reader postid))))
+
+(extend-type DatomicDatabase
+  adb/BlogDatabase
+  (-initschema [dt]
+    (initschema dt))
+  (-getallpost [db]
+    (getallpost db))
+  (-addpost [db title content]
+    (addpost db title content))
+  (-addsample [db]
+    (addsample db))
+  (-editpost [db postkey postid title content]
+    (editpost db postkey postid title content))
+  (-removepost [db postkey]
+    (removepost db postkey)))
+
+(defn createdb [name]
+  (DatomicDatabase.
+   (let [uri (str "datomic:mem://" name)]
+    #_(d/delete-database uri)
+    (d/create-database uri)
+    (d/connect uri))))
+
+#_(defn createdb [name]
+  (let [uri (str "datomic:mem://" name)]
+    #_(d/delete-database uri)
+    (d/create-database uri)
+    {:conn (d/connect uri)}))
+
+(defn scratch-conn
+  "Create a connection to an anonymous, in-memory database."
+  []
+  (let [uri (str (createdb))]
+    #_(d/delete-database uri)
+    (d/create-database uri)
+    (d/connect uri)))
