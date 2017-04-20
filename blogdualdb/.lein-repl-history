@@ -1,4 +1,3 @@
-(stop-dev)
 (refresh)
 (start-dev)
 api/database
@@ -498,3 +497,4 @@ database
 (stop-dev)
 (refresh)
 (start-dev)
+(stop-dev)

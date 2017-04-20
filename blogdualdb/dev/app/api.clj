@@ -8,6 +8,8 @@
 (defn initdb []
   (dtm/createdb "kambing"))
 
+#_(defn )
+
 (def database (initdb))
 
 (defn createschema []
