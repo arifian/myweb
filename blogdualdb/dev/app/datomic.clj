@@ -123,14 +123,22 @@
   (-editpost [db postkey postid title content]
     (editpost db postkey postid title content))
   (-removepost [db postkey]
-    (removepost db postkey)))
+    (removepost db postkey))
+  (-startdb [db]
+    (let [dt (assoc db :conn
+                    (let [uri (str "datomic:mem://" name)]
+                      #_(d/delete-database uri)
+                      (d/create-database uri)
+                      (d/connect uri)))]
+      (initschema dt)
+      dt))
+  (-stopdb [db]
+    (let [conn (:conn db)]
+      (d/release conn)
+      db)))
 
 (defn createdb [name]
-  (DatomicDatabase.
-   (let [uri (str "datomic:mem://" name)]
-    #_(d/delete-database uri)
-    (d/create-database uri)
-    (d/connect uri))))
+  (DatomicDatabase. nil))
 
 #_(defn createdb [name]
   (let [uri (str "datomic:mem://" name)]
@@ -145,3 +153,9 @@
     #_(d/delete-database uri)
     (d/create-database uri)
     (d/connect uri)))
+
+;; (defn createschema []
+;;     (db/initschema @database))
+
+;; (defn initdb []
+;;   (dtm/createdb "kambing"))

@@ -7,7 +7,10 @@
   (-addpost [db title content])
   (-addsample [db])
   (-editpost [db postkey postid title content] )
-  (-removepost [db postkey]))
+  (-removepost [db postkey])
+  (-startdb [db])
+  (-stopdb [db]))
+
 
 #_(defn createdb [name] )
 
@@ -28,3 +31,9 @@
 
 (defn removepost [db postkey]
   (-removepost db postkey))
+
+(defn startdb [db]
+  (-startdb db))
+
+(defn stopdb [db]
+  (-stopdb db))

@@ -18,3 +18,10 @@
   (println "\nloading abstractions mode... \n")
   (require 'exp.abstractions)
   (in-ns 'exp.abstractions))
+
+(defn multitest
+  []
+  "switch to multi.clj ns"
+  (println "\nloading multi test mode... \n")
+  (require 'exp.multi)
+  (in-ns 'exp.multi))

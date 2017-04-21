@@ -8,6 +8,7 @@
 
 (defonce database (atom {:posts nil :post-numbering 1}))
 
+
 (defrecord AtomDatabase [db])
 
 (defn initschema [dt] dt)
@@ -62,6 +63,8 @@
   (-editpost [db postkey postid title content]
     (editpost db postkey postid title content))
   (-removepost [db postkey]
-    (removepost db postkey)))
+    (removepost db postkey))
+  (-startdb [db] db)
+  (-stopdb [db] db))
 
 (defn createdb [name] (AtomDatabase. (atom {:posts nil :post-numbering 1})))

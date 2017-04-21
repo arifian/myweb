@@ -1,11 +1,10 @@
 (ns dev
-  (:require [io.pedestal.http :as http]
-            [io.pedestal.test :as test]
-            [clojure.tools.namespace.repl :refer [refresh]]
-            [app.routing :as routing]
-            [app.api :as api]))
-
-#_(refresh) ;refresh ns
+  (:require [clojure.tools.namespace.repl :refer [refresh]]
+            [app.atom :as atm]
+            [app.datomic :as dtm]
+            [app.db :as db]
+            [app.api :as api]
+            [app.system :as sys]))
 
 (defn exitdev
   []
@@ -14,47 +13,46 @@
   (require 'user)
   (in-ns 'user))
 
-(def service-map "declaring initial service map"
-  {::http/routes routing/routes
-   ::http/type   :jetty
-   ::http/port   8890})
-
 ;; For interactive development
-(defonce server (atom nil))
+
+(defonce system (atom (sys/initsystem nil)))
 
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
   (println "\n -------------------------------------------------- \n")
-  (reset! server
-          (-> (assoc service-map ::http/join? false)
-              http/create-server
-              http/start))
-  (api/initdb)
-  (api/createschema)
+  (reset! system (sys/startsystem nil))
+  ;; (let [database (db/startdb (dtm/createdb "kambing"))]
+  ;;   (reset! system
+  ;;           {:database database
+  ;;            :server (api/start-server (api/make-service-map database))}))
   (println "\n ------------------------schemainitialized-------------------------- \n"))
 
 (defn stop-dev
   "stopping server"
   []
   (println "\n -------------------------------------------------- \n")
-  (http/stop @server)
-  (reset! server (atom nil))
+  (sys/stopsystem @system)
+  ;; (let [_  (api/stop-server (:server @system))
+  ;;       _  (db/stopdb (:database @system))]
+  ;;   (reset! system nil))
+  (reset! system nil)
   (println "\n -------------------------------------------------- \n"))
 
 (defn restart []
   (stop-dev)
+  (refresh)
   (start-dev))
 
-(defn test-request "route testing repl function" [verb url]
-  (io.pedestal.test/response-for (::http/service-fn @server) verb url))
+;; (defn test-request "route testing repl function" [verb url]
+;;   (io.pedestal.test/response-for (::http/service-fn @server) verb url))
 
-(defn check-routes
-  "Print our application's routes"
-  []
-  (routing/print-routes))
+;; (defn check-routes
+;;   "Print our application's routes"
+;;   []
+;;   (routing/print-routes))
 
-(defn named-route
-  "Finds a route by name"
-  [route-name]
-  (routing/named-route route-name))
+;; (defn named-route
+;;   "Finds a route by name"
+;;   [route-name]
+;;   (routing/named-route route-name))
