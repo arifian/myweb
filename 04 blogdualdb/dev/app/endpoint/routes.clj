@@ -1,4 +1,4 @@
-(ns app.api.routes
+(ns app.endpoint.routes
   (:require [app.template.page :as mold]
             [app.database.db :as db]
             [io.pedestal.http.body-params :as bd]

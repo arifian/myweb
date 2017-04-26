@@ -1,6 +1,7 @@
 (ns dev
   (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [app.api.system :as sys]))
+            [app.system :as sys]
+            [clojure.edn :as edn]))
 
 (defn exitdev
   []
@@ -9,22 +10,29 @@
   (require 'user)
   (in-ns 'user))
 
+(defn config
+  "return development configuration map"
+  [] 
+  (-> "config/config.edn"
+      slurp
+      edn/read-string))
+
 ;; For interactive development
 
-(defonce system (atom (sys/initsystem nil)))
+(defonce system (atom (sys/initsystem (config))))
 
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
   (println "\n ------------------------starting-system-------------------------- \n")
-  (reset! system (sys/startsystem nil))
+  (swap! system sys/startsystem)
   (println "\n -------------------------systemstarted-------------------------- \n"))
 
 (defn stop-dev
   "stopping server"
   []
   (println "\n -----------------------stoping system--------------------------- \n")
-  (sys/stopsystem @system)
+  (swap! system sys/stopsystem)
   (reset! system nil)
   (println "\n -----------------------system stoped--------------------------- \n"))
 
