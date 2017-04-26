@@ -1,12 +1,9 @@
-(ns app.api
-  (:require [io.pedestal.interceptor :refer [interceptor]]
-            [app.template :as mold]
-            [app.db :as db]
+(ns app.api.routes
+  (:require [app.template.page :as mold]
+            [app.database.db :as db]
+            [io.pedestal.http.body-params :as bd]
             [io.pedestal.http :as http]
-            [io.pedestal.test :as test]
-            [io.pedestal.http.route :as route]
-            [io.pedestal.http.route.definition.table :refer [table-routes]]
-            [io.pedestal.http.body-params :as bd]))
+            [io.pedestal.interceptor :refer [interceptor]]))
 
 ;;interceptor
 
@@ -124,39 +121,3 @@
     ["/edit/:postid" :get (conj common-interceptors (editpage-su-15 database)) :route-name :editpost-r]
     ["/submitedit/:postid" :post (conj common-interceptors (submitedit-su-15 database)) :route-name :submitedit-r]
     ["/delete/:postid" :get (conj common-interceptors (delete-su-15 database)) :route-name :delete-r]})
-
-;;;;;;;;;;;;;
-
-(defn make-routes
-  [database]
-  (route/expand-routes (baseroutes database)))
-
-;dev utility
-
-(defn print-routes
-  "Print our application's routes"
-  []
-  (route/print-routes (table-routes baseroutes)))
-
-(defn named-route
-  "Finds a route by name"
-  [route-name]
-  (->> baseroutes
-       table-routes
-       (filter #(= route-name (:route-name %)))
-       first))
-
-(defn make-service-map
-  "declaring initial service map"
-  [database]
-  {::http/routes (make-routes database)
-   ::http/type   :jetty
-   ::http/port   8890})
-
-(defn start-server [service-map]
-  (-> (assoc service-map ::http/join? false)
-              http/create-server
-              http/start))
-
-(defn stop-server [server]
-  (http/stop server))

@@ -1,14 +1,3 @@
-(stop-dev)
-(refresh)
-(start-dev)
-(api/database)
-api/database
-(stop-dev)
-(refresh)
-(start-dev)
-(stop-dev)
-(refresh)
-(start-dev)
 api/database
 (stop-dev)
 (refresh)
@@ -498,3 +487,14 @@ system
 system
 (dev)
 (refresh)
+(dev)
+(start-dev)
+system
+(:database system)
+(:system system)
+(keys system)
+(keys @system)
+(:database @system)
+(:system @system)
+(:server @system)
+(stop-dev)

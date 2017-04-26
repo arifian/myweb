@@ -1,11 +1,7 @@
 (ns dev
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.edn :as edn]
-            [app.atom :as atm]
-            [app.datomic :as dtm]
-            [app.db :as db]
-            [app.api :as api]
-            [app.system :as sys]))
+            [app.api.system :as sys]))
 
 (defn exitdev
   []
@@ -14,19 +10,6 @@
   (require 'user)
   (in-ns 'user))
 
-;; (defonce dev-system nil)
-
-;; (defn dev-config
-;;   "return development configuration map"
-;;   [] 
-;;   (-> "config/config.edn"
-;;       slurp
-;;       edn/read-string))
-
-;; (defn init []
-;;   (alter-var-root #'dev-system
-;;                   (constantly (sys/init-dev-system (dev-config)))))
-
 ;; For interactive development
 
 (defonce system (atom (sys/initsystem nil)))
@@ -34,24 +17,17 @@
 (defn start-dev
   "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
   []
-  (println "\n -------------------------------------------------- \n")
+  (println "\n ------------------------starting-system-------------------------- \n")
   (reset! system (sys/startsystem nil))
-  ;; (let [database (db/startdb (dtm/createdb "kambing"))]
-  ;;   (reset! system
-  ;;           {:database database
-  ;;            :server (api/start-server (api/make-service-map database))}))
-  (println "\n ------------------------schemainitialized-------------------------- \n"))
+  (println "\n -------------------------systemstarted-------------------------- \n"))
 
 (defn stop-dev
   "stopping server"
   []
-  (println "\n -------------------------------------------------- \n")
+  (println "\n -----------------------stoping system--------------------------- \n")
   (sys/stopsystem @system)
-  ;; (let [_  (api/stop-server (:server @system))
-  ;;       _  (db/stopdb (:database @system))]
-  ;;   (reset! system nil))
   (reset! system nil)
-  (println "\n -------------------------------------------------- \n"))
+  (println "\n -----------------------system stoped--------------------------- \n"))
 
 (defn restart []
   (stop-dev)

@@ -1,4 +1,4 @@
-(ns app.db)
+(ns app.database.db)
 
 (defprotocol BlogDatabase
   #_(-createdb [name])

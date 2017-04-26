@@ -1,5 +1,5 @@
-(ns app.template
-  (:require [app.function :as foo]
+(ns app.template.page
+  (:require [app.template.function :as foo]
             [hiccup.core :as hc]))
 
 (def aboutstring {:satu (slurp "resources/aboutsampletext/sampleone.txt")

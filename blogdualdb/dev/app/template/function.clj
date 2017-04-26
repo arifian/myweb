@@ -1,4 +1,4 @@
-(ns app.function)
+(ns app.template.function)
 
 (defn post-list [post]
   (for [key (keys post)]

@@ -1,16 +1,12 @@
-(ns app.datomic
+(ns app.database.datomic
   (:require [datomic.api :as d]
-            [app.db :as adb]))
+            [app.database.db :as adb]))
 
 (defn- default-uuid-reader [form]
   {:pre [(string? form)]}
   (java.util.UUID/fromString form))
 
 (defrecord DatomicDatabase [conn])
-
-#_(def conn (scratch-conn))
-
-#_(defn touuid [id] ([uuid id] 0))
 
 (def blog-schema 
   [{:db/ident :post/id
@@ -36,8 +32,6 @@
     :db.install/_attribute :db.part/db}])
 
 (defn initschema [dt] @(d/transact (:conn dt) blog-schema))
-
-#_(def schematic @(d/transact conn blog-schema))
 
 (def first-posts
   [{:post/id (d/squuid)
@@ -97,12 +91,6 @@
 (defn editpost [dt postkey postid title content]
   @(d/transact (:conn dt) (scratcheditpost (default-uuid-reader postid) title content)))
 
-#_@(d/transact
-  conn
-  [[:db/add (d/tempid :db.part/user)
-    :db/doc "Hello world"]])
-
-#_(defn scratchremovepost [squuid] '_)
 
 (defn scratchremovepost [dt squuid]
   [[:db.fn/retractEntity (q-post-single dt squuid)]])
@@ -140,12 +128,6 @@
 (defn createdb [name]
   (DatomicDatabase. nil))
 
-#_(defn createdb [name]
-  (let [uri (str "datomic:mem://" name)]
-    #_(d/delete-database uri)
-    (d/create-database uri)
-    {:conn (d/connect uri)}))
-
 (defn scratch-conn
   "Create a connection to an anonymous, in-memory database."
   []
@@ -154,8 +136,3 @@
     (d/create-database uri)
     (d/connect uri)))
 
-;; (defn createschema []
-;;     (db/initschema @database))
-
-;; (defn initdb []
-;;   (dtm/createdb "kambing"))
