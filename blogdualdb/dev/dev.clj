@@ -1,5 +1,6 @@
 (ns dev
   (:require [clojure.tools.namespace.repl :refer [refresh]]
+            [clojure.edn :as edn]
             [app.atom :as atm]
             [app.datomic :as dtm]
             [app.db :as db]
@@ -12,6 +13,19 @@
   (println "\nloading user ns... \n")
   (require 'user)
   (in-ns 'user))
+
+;; (defonce dev-system nil)
+
+;; (defn dev-config
+;;   "return development configuration map"
+;;   [] 
+;;   (-> "config/config.edn"
+;;       slurp
+;;       edn/read-string))
+
+;; (defn init []
+;;   (alter-var-root #'dev-system
+;;                   (constantly (sys/init-dev-system (dev-config)))))
 
 ;; For interactive development
 

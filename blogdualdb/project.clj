@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
 
                  ;;web
-                 
+                 [ring "1.6.0-RC3"]
                  [io.pedestal/pedestal.service "0.5.1"]
                  [io.pedestal/pedestal.route   "0.5.1"]
                  [io.pedestal/pedestal.jetty   "0.5.1"]
