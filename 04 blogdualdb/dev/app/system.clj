@@ -9,41 +9,12 @@
             [app.database.atom :as atm]
             [app.database.datomic :as dtm]
             [app.database.db :as db]
-            [app.endpoint.routes :as ep.route]))
-
-(defn make-routes
-  [database]
-  (route/expand-routes (ep.route/baseroutes database)))
+            [app.endpoint :as ep]
+            [app.server :as server]))
 
 ;dev utility
 
-(defn print-routes
-  "Print our application's routes"
-  []
-  (route/print-routes (table-routes (ep.route/baseroutes))))
-
-(defn named-route
-  "Finds a route by name"
-  [route-name]
-  (->> (ep.route/baseroutes)
-       table-routes
-       (filter #(= route-name (:route-name %)))
-       first))
-
-(defn make-service-map
-  "declaring initial service map"
-  [database config]
-  {::http/routes (make-routes database)
-   ::http/type   :jetty
-   ::http/port   (:port config)})
-
-(defn start-server [service-map]
-  (-> (assoc service-map ::http/join? false)
-      http/create-server
-      http/start))
-
-(defn stop-server [server]
-  (http/stop server))
+#_(make-routes database)
 
 (defn createdb "default to dtm"
   [config]
@@ -53,16 +24,20 @@
     :else (dtm/createdb (:dbname config))))
 
 (defn startsystem [system]
-  (let [database (db/startdb (createdb (:config system)))]
+  (let [database (db/startdb (:database system))
+        service (assoc (:service system) :database database)
+        server (assoc (:server system) :service service)]
     {:database database
-     :server (start-server (make-service-map database (:config system)))}))
+     :service service
+     :server (server/start-server server)}))
 
 (defn stopsystem [system]
-  (let [_  (stop-server (:server system))
+  (let [_  (server/stop-server (:server system))
         _  (db/stopdb (:database system))]
     system))
 
 (defn initsystem [config]
-  {:server nil
-   :database nil
+  {:server (server/createserver config)
+   :service (ep/make-service-map config)
+   :database (createdb config)
    :config config})
