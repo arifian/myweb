@@ -1,2 +1,3 @@
 {:port 8890
- :dbname "kambing"}
+ :dbname "kambing"
+ :dbtype :dtm}

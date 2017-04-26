@@ -43,18 +43,25 @@
   [database]
   {::http/routes (make-routes database)
    ::http/type   :jetty
-   ::http/port   (:port getconfig)})
+   ::http/port   (:port (getconfig))})
 
 (defn start-server [service-map]
   (-> (assoc service-map ::http/join? false)
-              http/create-server
-              http/start))
+      http/create-server
+      http/start))
 
 (defn stop-server [server]
   (http/stop server))
 
+(defn createdb "default to dtm"
+  []
+  (cond
+    (= (:dbtype (getconfig)) :dtm) (dtm/createdb (:dbname (getconfig)))
+    (= (:dbtype (getconfig)) :atm) (atm/createdb (:dbname (getconfig)))
+    :else (dtm/createdb (:dbname (getconfig)))))
+
 (defn startsystem [system]
-  (let [database (db/startdb (dtm/createdb (:dbname getconfig)))]
+  (let [database (db/startdb (createdb))]
     {:database database
      :server (start-server (make-service-map database))}))
 
