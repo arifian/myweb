@@ -1,5 +1,6 @@
 (ns app.database.atom
-  (:require [app.database.db :as adb]))
+  (:require [app.database.db :as adb]
+            [com.stuartsierra.component :as component]))
 
 (def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}
                          :2 {:number 2 :title "Lorem Ipsum #2" :content (slurp "resources/postsampletext/sampletwo.txt")}
@@ -56,6 +57,11 @@
   (-removepost [db postkey]
     (removepost db postkey))
   (-startdb [db] db)
-  (-stopdb [db] db))
+  (-stopdb [db] db)
+  component/Lifecycle
+  (start [db]
+    db)
+  (stop [db]
+    db))
 
 (defn createdb [name] (AtomDatabase. (atom {:posts nil :post-numbering 1})))

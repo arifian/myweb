@@ -1,6 +1,7 @@
 (ns app.database.datomic
   (:require [datomic.api :as d]
-            [app.database.db :as adb]))
+            [app.database.db :as adb]
+            [com.stuartsierra.component :as component]))
 
 (defn- default-uuid-reader [form]
   {:pre [(string? form)]}
@@ -121,6 +122,19 @@
       (initschema dt)
       dt))
   (-stopdb [db]
+    (let [conn (:conn db)]
+      (d/release conn)
+      db))
+  component/Lifecycle
+  (start [db]
+    (let [dt (assoc db :conn
+                    (let [uri (str "datomic:mem://" name)]
+                      #_(d/delete-database uri)
+                      (d/create-database uri)
+                      (d/connect uri)))]
+      (initschema dt)
+      dt))
+  (stop [db]
     (let [conn (:conn db)]
       (d/release conn)
       db)))

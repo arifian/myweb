@@ -23,21 +23,32 @@
     (= (:dbtype config) :atm) (atm/createdb (:dbname config))
     :else (dtm/createdb (:dbname config))))
 
+;; (defn startsystem [system]
+;;   (let [database (db/startdb (:database system))
+;;         service (assoc (:service system) :database database)
+;;         server (assoc (:server system) :service service)]
+;;     {:database database
+;;      :service service
+;;      :server (server/start-server server)}))
+
 (defn startsystem [system]
-  (let [database (db/startdb (:database system))
-        service (assoc (:service system) :database database)
-        server (assoc (:server system) :service service)]
-    {:database database
-     :service service
-     :server (server/start-server server)}))
+  (component/start system))
+
+;; (defn stopsystem [system]
+;;   (let [_  (server/stop-server (:server system))
+;;         _  (db/stopdb (:database system))]
+;;     system))
 
 (defn stopsystem [system]
-  (let [_  (server/stop-server (:server system))
-        _  (db/stopdb (:database system))]
-    system))
+  (component/stop system))
 
 (defn initsystem [config]
-  {:server (server/createserver config)
-   :service (ep/make-service-map config)
+  (component/system-map
    :database (createdb config)
-   :config config})
+   :service (component/using
+             (ep/make-service-map config)
+             {:database :database})
+   :server (component/using
+            (server/createserver config)
+            {:service :service})
+   :config config))

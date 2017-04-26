@@ -1,7 +1,8 @@
 (ns app.server
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
-            [app.endpoint :as ep]))
+            [app.endpoint :as ep]
+            [com.stuartsierra.component :as component]))
 
 (defn start-server [server]
   (-> (assoc (:service server) ::http/join? false)
@@ -12,5 +13,14 @@
 (defn stop-server [server]
   (http/stop server))
 
+(defrecord Server [service])
+
 (defn createserver [config]
-  {:service nil})
+  (Server. nil))
+
+(extend-type Server
+  component/Lifecycle
+  (start [server]
+    (start-server server))
+  (stop [server]
+    (stop-server server)))
