@@ -1,6 +1,5 @@
 (ns dev
   (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [clojure.edn :as edn]
             [app.api.system :as sys]))
 
 (defn exitdev

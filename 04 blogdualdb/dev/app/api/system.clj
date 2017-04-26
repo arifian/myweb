@@ -6,6 +6,7 @@
             [com.stuartsierra.component :as component]
             [ring.middleware.session.cookie :as cookie]
             [io.pedestal.http.secure-headers :as http.sh]
+            [clojure.edn :as edn]
             [app.database.atom :as atm]
             [app.database.datomic :as dtm]
             [app.database.db :as db]
@@ -30,12 +31,19 @@
        (filter #(= route-name (:route-name %)))
        first))
 
+(defn getconfig
+  "return development configuration map"
+  [] 
+  (-> "config/config.edn"
+      slurp
+      edn/read-string))
+
 (defn make-service-map
   "declaring initial service map"
   [database]
   {::http/routes (make-routes database)
    ::http/type   :jetty
-   ::http/port   8890})
+   ::http/port   (:port getconfig)})
 
 (defn start-server [service-map]
   (-> (assoc service-map ::http/join? false)
@@ -46,7 +54,7 @@
   (http/stop server))
 
 (defn startsystem [system]
-  (let [database (db/startdb (dtm/createdb "kambing"))]
+  (let [database (db/startdb (dtm/createdb (:dbname getconfig)))]
     {:database database
      :server (start-server (make-service-map database))}))
 
@@ -58,53 +66,3 @@
 (defn initsystem [_]
   {:server nil
    :database nil})
-
-;; (defn pedestal-config
-;;   [config]
-;;   {;::http/host "0.0.0.0"
-;;    ::http/port 5050
-;;    ::http/type :jetty
-;;    ::http/join? false
-;;    ::http/resource-path "/public/"
-;;    ::http/enable-session {:store (cookie/cookie-store
-;;                                    {:key (-> config :cookie-key)})
-;;                           :cookie-name "blogtest-cookies"}
-;;    ::http/routes (make-routes (:database config))
-;;    ::http/secure-headers {:content-security-policy-settings
-;;                           (http.sh/content-security-policy-header "object-src 'none';")}})
-
-;; (defn pedestal-config-fn
-;;   ""
-;;   [config]
-;;   (http/default-interceptors (pedestal-config config)))
-
-;; (defn init-production-system
-;;   ""
-;;   [config]
-;;   (component/system-map
-;;     :config config
-;;     :mycomponent {:my :component}
-;;     :datomic (dtm/make (-> config :database :datomic))
-;;     :pedestal (component/using
-;;                 (pedestal/pedestal pedestal-config-fn config)
-;;                 [:mycomponent :datomic])))
-
-;; (defn init-dev-system
-;;   ""
-;;   [config]
-;;   (merge
-;;     (init-production-system config)
-;;     (component/system-map
-;;       :config config
-;;       :mycomponent {:my :component}
-;;       :datomic (component/using
-;;                  (datomic/make (-> config :database :datomic))
-;;                  [:content-provider])
-;;       :content-provider (component/using
-;;                           (content/make)
-;;                           [:directories :library])
-;;       :directories (directories/make config)
-;;       :library (library/make)
-;;       :pedestal (component/using
-;;                   (pedestal/dev-pedestal pedestal-config-fn config)
-;;                   [:mycomponent :datomic]))))
