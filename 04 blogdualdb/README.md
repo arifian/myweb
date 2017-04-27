@@ -1,6 +1,8 @@
 # webtest
-
-Both Atom & Datomic useable. (implemented multimethod, protocol, record)
+<ul>
+<li>Both Atom & Datomic useable. (implemented multimethod, protocol, record)</li>
+<li>Applied stuartsierra's components. Included comented non stuartsierra component system (system.clj)</li>
+</ul>
 
 ## Usage
 

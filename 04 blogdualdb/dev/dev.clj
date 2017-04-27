@@ -36,7 +36,9 @@
   (reset! system nil)
   (println "\n -----------------------system stoped--------------------------- \n"))
 
-(defn restart []
+(defn restart
+  "restart the server"
+  []
   (stop-dev)
   (refresh)
   (start-dev))
