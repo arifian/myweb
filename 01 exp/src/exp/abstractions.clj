@@ -15,7 +15,7 @@
 (WereWolf. "David" "London Tourist")
 
 (def jacob (->WereWolf "Jacob" "Lead Shirt Discarder"))
-(.name jacob) 
+;(.name jacob) 
 ; => "Jacob"
 
 (:name jacob) 
