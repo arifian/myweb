@@ -1,0 +1,3 @@
+{:port 8890
+ :dbname "kambing"
+ :dbtype :dtm}
