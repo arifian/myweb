@@ -1,36 +1,32 @@
 (ns app.database)
 
-(defprotocol BlogDatabase
-  #_(-createdb [name])
+(defprotocol UserDatabase
   (-initschema [dt])
-  (-getallpost [db])
-  (-addpost [db title content])
+  (-getalluser [db])
+  (-adduser [db username password])
   (-addsample [db])
-  (-editpost [db postkey postid title content] )
-  (-removepost [db postkey])
+  (-edituser [db userkey userid username password] )
+  (-removeuser [db userkey])
   (-startdb [db])
   (-stopdb [db]))
-
-
-#_(defn createdb [name] )
 
 (defn initschema [dt]
   (-initschema dt))
 
-(defn getallpost [db]
-  (-getallpost db))
+(defn getalluser [db]
+  (-getalluser db))
 
-(defn addpost [db title content]
- (-addpost db title content))
+(defn adduser [db username password]
+ (-adduser db username password))
 
 (defn addsample [db]
   (-addsample db))
 
-(defn editpost [db postkey postid title content]
-  (-editpost db postkey postid title content))
+(defn edituser [db userkey userid username password]
+  (-edituser db userkey userid username password))
 
-(defn removepost [db postkey]
-  (-removepost db postkey))
+(defn removeuser [db userkey]
+  (-removeuser db userkey))
 
 (defn startdb [db]
   (-startdb db))

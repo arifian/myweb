@@ -7,112 +7,114 @@
   {:pre [(string? form)]}
   (java.util.UUID/fromString form))
 
-(defrecord DatomicDatabase [conn])
+(defrecord DatomicUser [conn])
 
-(def blog-schema 
-  [{:db/ident :post/id
+(def user-schema 
+  [{:db/ident :user/id
     :db/valueType :db.type/uuid
     :db/unique :db.unique/identity
     :db/cardinality :db.cardinality/one
-    :db/doc "Post's ID"
+    :db/doc "User's ID"
     :db/id (d/tempid :db.part/db)
     :db.install/_attribute :db.part/db}
    
-   {:db/ident :post/title
+   {:db/ident :user/username
     :db/valueType :db.type/string
+    :db/unique :db.unique/identity
     :db/cardinality :db.cardinality/one
-    :db/doc "Post's Title"
+    :db/doc "User Username"
     :db/id (d/tempid :db.part/db)
     :db.install/_attribute :db.part/db}
    
-   {:db/ident :post/content
+   {:db/ident :user/password
     :db/valueType :db.type/string
     :db/cardinality :db.cardinality/one
-    :db/doc "Post's Content"
+    :db/doc "Password"
     :db/id (d/tempid :db.part/db)
     :db.install/_attribute :db.part/db}])
 
-(defn initschema [dt] @(d/transact (:conn dt) blog-schema))
+(defn initschema [dt] @(d/transact (:conn dt) user-schema))
 
-(def first-posts
-  [{:post/id (d/squuid)
-    :post/title "Ipsum One"
-    :post/content (slurp "resources/postsampletext/sampleone.txt")
+(def user-sample
+  [{:user/id (d/squuid)
+    :user/username "admin"
+    :user/password "admin"
     :db/id (d/tempid :db.part/user)}
-   {:post/id (d/squuid)
-    :post/title "Ipsum Two"
-    :post/content (slurp "resources/postsampletext/sampletwo.txt")
+   {:user/id (d/squuid)
+    :user/username "admin2"
+    :user/password "admin2"
     :db/id (d/tempid :db.part/user)}
-   {:post/id (d/squuid)
-    :post/title "Ipsum Three"
-    :post/content (slurp "resources/postsampletext/samplethree.txt")
-    :db/id (d/tempid :db.part/user)}])
+   {:user/id (d/squuid)
+    :user/username "SirJohn"
+    :user/password "thebrave"
+    :db/id (d/tempid :db.part/user)}
+   ])
 
-(defn addsample [dt] @(d/transact (:conn dt) first-posts))
+(defn addsample [dt] @(d/transact (:conn dt) user-sample))
 
-(defn q-allpost [dt]
-  (d/q '[:find ?id ?title ?content
+(defn q-alluser [dt]
+  (d/q '[:find ?id ?username ?password
          :where
-         [?e :post/id ?id]
-         [?e :post/title ?title]
-         [?e :post/content ?content]]
+         [?e :user/id ?id]
+         [?e :user/username ?username]
+         [?e :user/password ?password]]
        (d/db (:conn dt))))
 
-(defn transformit [post]
-  (assoc {} (keyword (str (post 0))) {:number (post 0) :title (post 1) :content (post 2)}))
+(defn transformit [user]
+  (assoc {} (keyword (str (user 0))) {:id (user 0) :username (user 1) :password (user 2)}))
 
-(defn getallpost [dt] (into (sorted-map) (map transformit (q-allpost dt))))
+(defn getalluser [dt] (into (sorted-map) (map transformit (q-alluser dt))))
 
-(defn scratchaddpost [title content]
-  [{:post/id (d/squuid)
-    :post/title title
-    :post/content content
+(defn scratchadduser [username password]
+  [{:user/id (d/squuid)
+    :user/username username
+    :user/password password
     :db/id (d/tempid :db.part/user)}])
 
-(defn addpost [dt title content]
-  @(d/transact (:conn dt) (scratchaddpost title content)))
+(defn adduser [dt username password]
+  @(d/transact (:conn dt) (scratchadduser username password)))
 
-(defn q-post-single
+(defn q-user-single
   [dt squuid]
   "return entity id"
   (((apply vector
          (d/q '[:find ?e
                 :in $ ?squuid
                 :where
-                [?e :post/id ?squuid]]
+                [?e :user/id ?squuid]]
               (d/db (:conn dt))
               squuid))0)0))
 
-(defn scratcheditpost [squuid title content]
-  [{:post/id squuid
-    :post/title title
-    :post/content content
+(defn scratchedituser [squuid username password]
+  [{:user/id squuid
+    :user/username username
+    :user/password password
     :db/id (d/tempid :db.part/user)}])
 
-(defn editpost [dt postkey postid title content]
-  @(d/transact (:conn dt) (scratcheditpost (default-uuid-reader postid) title content)))
+(defn edituser [dt userkey userid username password]
+  @(d/transact (:conn dt) (scratchedituser (default-uuid-reader userid) username password)))
 
 
-(defn scratchremovepost [dt squuid]
-  [[:db.fn/retractEntity (q-post-single dt squuid)]])
+(defn scratchremoveuser [dt squuid]
+  [[:db.fn/retractEntity (q-user-single dt squuid)]])
 
-(defn removepost [dt postid]
-  @(d/transact (:conn dt) (scratchremovepost dt (default-uuid-reader postid))))
+(defn removeuser [dt userid]
+  @(d/transact (:conn dt) (scratchremoveuser dt (default-uuid-reader userid))))
 
-(extend-type DatomicDatabase
-  adb/BlogDatabase
+(extend-type DatomicUser
+  adb/UserDatabase
   (-initschema [dt]
     (initschema dt))
-  (-getallpost [db]
-    (getallpost db))
-  (-addpost [db title content]
-    (addpost db title content))
+  (-getalluser [db]
+    (getalluser db))
+  (-adduser [db title content]
+    (adduser db title content))
   (-addsample [db]
     (addsample db))
-  (-editpost [db postkey postid title content]
-    (editpost db postkey postid title content))
-  (-removepost [db postkey]
-    (removepost db postkey))
+  (-edituser [db userkey userid title content]
+    (edituser db userkey userid title content))
+  (-removeuser [db userkey]
+    (removeuser db userkey))
   (-startdb [db]
     (let [dt (assoc db :conn
                     (let [uri (str "datomic:mem://" name)]
@@ -129,7 +131,6 @@
   (start [db]
     (let [dt (assoc db :conn
                     (let [uri (str "datomic:mem://" name)]
-                      #_(d/delete-database uri)
                       (d/create-database uri)
                       (d/connect uri)))]
       (initschema dt)
@@ -140,13 +141,12 @@
       db)))
 
 (defn createdb [name]
-  (DatomicDatabase. nil))
+  (DatomicUser. nil))
 
 (defn scratch-conn
   "Create a connection to an anonymous, in-memory database."
   []
   (let [uri (str (createdb))]
-    #_(d/delete-database uri)
     (d/create-database uri)
     (d/connect uri)))
 

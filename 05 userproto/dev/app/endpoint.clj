@@ -27,17 +27,17 @@
             response {:status 200 :body (mold/about-html)}]
         (assoc context :response response)))}))
 
-(defn postlist-su-15 [service]
+(defn userlist-su-15 [service]
   (interceptor
    {:name :home-sukhoi
     :enter
     (fn [context]
       (let [database (:database service)
             request (:request context)
-            response {:status 200 :body (mold/postlist-html (db/getallpost database))}]
+            response {:status 200 :body (mold/userlist-html (db/getalluser database))}]
         (assoc context :response response)))}))
 
-(defn createpost-su-15 [service]
+(defn createuser-su-15 [service]
   (interceptor
    {:name :create-sukhoi
     :enter
@@ -45,16 +45,16 @@
       (let [database (:database service)
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))]
-        (db/addpost database title content) 
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+        (db/adduser database title content) 
+        (assoc context :response {:status 200 :body (mold/userlist-html (db/getalluser database))})))}))
 
-(defn newpost-su-15 [service]
+(defn newuser-su-15 [service]
   (interceptor
-   {:name :newpost-sukhoi
+   {:name :newuser-sukhoi
     :enter
     (fn [context]
       (let [request (:request context)
-            response {:status 200 :body (mold/newpost-html)}]
+            response {:status 200 :body (mold/newuser-html)}]
         (assoc context :response response)))}))
 
 (defn addsample-su-15 [service]
@@ -65,18 +65,18 @@
       (let [database (:database service)
             request (:request context)]
         (db/addsample database)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+        (assoc context :response {:status 200 :body (mold/userlist-html (db/getalluser database))})))}))
 
-(defn getpost-su-15 [service]
+(defn getuser-su-15 [service]
   (interceptor
-   {:name :getpost-sukhoi
+   {:name :getuser-sukhoi
     :enter
     (fn [context]
       (let [database (:database service)
-            postid (get-in context [:request :path-params :postid])
-            postkey (keyword postid)
-            response {:status 200 :body (mold/getpost-html (db/getallpost database) postkey postid)}]
-        (if (= (postkey (db/getallpost database)) nil)
+            userid (get-in context [:request :path-params :userid])
+            userkey (keyword userid)
+            response {:status 200 :body (mold/getuser-html (db/getalluser database) userkey userid)}]
+        (if (= (userkey (db/getalluser database)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -86,10 +86,10 @@
     :enter
     (fn [context]
       (let [database (:database service)
-            postid (get-in context [:request :path-params :postid])
-            postkey (keyword postid)
-            response {:status 200 :body (mold/editpage-html (db/getallpost database) postkey postid)}]
-        (if (= (postkey (db/getallpost database)) nil)
+            userid (get-in context [:request :path-params :userid])
+            userkey (keyword userid)
+            response {:status 200 :body (mold/editpage-html (db/getalluser database) userkey userid)}]
+        (if (= (userkey (db/getalluser database)) nil)
           (assoc context :response {:status 404 :body (mold/not-found-html)})
           (assoc context :response response))))}))
 
@@ -99,12 +99,12 @@
     :enter
     (fn [context]
       (let [database (:database service)
-            postid (get-in context [:request :path-params :postid])
+            userid (get-in context [:request :path-params :userid])
             title (:title (:form-params (:request context)))
             content (:content (:form-params (:request context)))
-            postkey (keyword postid)]
-        (db/editpost database postkey postid title content)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+            userkey (keyword userid)]
+        (db/edituser database userkey userid title content)
+        (assoc context :response {:status 200 :body (mold/userlist-html (db/getalluser database))})))}))
 
 (defn delete-su-15 [service]
   (interceptor
@@ -112,24 +112,24 @@
     :enter
     (fn [context]
       (let [database (:database service)
-            postid (get-in context [:request :path-params :postid])]
-        (db/removepost database postid)
-        (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
+            userid (get-in context [:request :path-params :userid])]
+        (db/removeuser database userid)
+        (assoc context :response {:status 200 :body (mold/userlist-html (db/getalluser database))})))}))
 
 (def common-interceptors [(bd/body-params) http/html-body])
 
 (defn baseroutes
   [service]
   #{["/" :get (conj common-interceptors (landing-su-15 service)) :route-name :landing-r]
-    ["/postlist" :get (conj common-interceptors (postlist-su-15 service)) :route-name :postlist-r]
+    ["/userlist" :get (conj common-interceptors (userlist-su-15 service)) :route-name :userlist-r]
     ["/about" :get (conj common-interceptors (about-su-15 service)) :route-name :about-r]
-    ["/newpost" :get (conj common-interceptors (newpost-su-15 service)) :route-name :newpost-r]
-    ["/createpost" :post (conj common-interceptors (createpost-su-15 service)) :route-name :createpost-r]
+    ["/newuser" :get (conj common-interceptors (newuser-su-15 service)) :route-name :newuser-r]
+    ["/createuser" :post (conj common-interceptors (createuser-su-15 service)) :route-name :createuser-r]
     ["/addsample" :post (conj common-interceptors (addsample-su-15 service)) :route-name :addsample-r]
-    ["/post/:postid" :get (conj common-interceptors (getpost-su-15 service)) :route-name :getpost-r]
-    ["/edit/:postid" :get (conj common-interceptors (editpage-su-15 service)) :route-name :editpost-r]
-    ["/submitedit/:postid" :post (conj common-interceptors (submitedit-su-15 service)) :route-name :submitedit-r]
-    ["/delete/:postid" :get (conj common-interceptors (delete-su-15 service)) :route-name :delete-r]})
+    ["/user/:userid" :get (conj common-interceptors (getuser-su-15 service)) :route-name :getuser-r]
+    ["/edit/:userid" :get (conj common-interceptors (editpage-su-15 service)) :route-name :edituser-r]
+    ["/submitedit/:userid" :post (conj common-interceptors (submitedit-su-15 service)) :route-name :submitedit-r]
+    ["/delete/:userid" :get (conj common-interceptors (delete-su-15 service)) :route-name :delete-r]})
 
 (defn make-routes
   "Define the routes for the service"

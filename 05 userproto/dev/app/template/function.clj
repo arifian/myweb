@@ -1,11 +1,11 @@
 (ns app.template.function)
 
-(defn post-list [post]
-  (for [key (keys post)]
+(defn user-list [user]
+  (for [key (keys user)]
     [:div {:class "col-sm-4"}
-     [:p (str "Post #" (:number (key post)))]
-     [:a {:href (str "/post/" (:number (key post)))} [:h3 (str (:title (key post)))]]
-     [:p (str (:content (key post)))[:br]]]))
+     [:p (str "User #" (:number (key user)))]
+     [:a {:href (str "/user/" (:number (key user)))} [:h3 (str (:username (key user)))]]
+     [:p (str (:password (key user)))[:br]]]))
 
 (defn bootstrap []
   (for [cnt (range 4)]
