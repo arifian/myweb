@@ -2,6 +2,8 @@
   (:require [app.template.function :as foo]
             [hiccup.core :as hc]))
 
+;hiccup page templates
+
 (def aboutstring {:satu (slurp "resources/aboutsampletext/sampleone.txt")
                   :dua (slurp "resources/aboutsampletext/sampletwo.txt")
                   :tiga (slurp "resources/aboutsampletext/samplethree.txt")})

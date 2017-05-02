@@ -6,8 +6,8 @@
 ;; difficult. This extra step ensures the REPL starts, no matter what.
 
 (defn dev
-  []
   "switch to dev ns"
+  []
   (println "\nloading dev mode... \n")
   (require 'dev)
   (in-ns 'dev))

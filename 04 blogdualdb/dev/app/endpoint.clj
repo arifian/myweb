@@ -1,13 +1,13 @@
 (ns app.endpoint
   (:require [app.template.page :as mold]
-            [app.database.db :as db]
+            [app.database :as db]
             [io.pedestal.http.body-params :as bd]
             [io.pedestal.http :as http]
             [io.pedestal.interceptor :refer [interceptor]]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.route.definition.table :refer [table-routes]]))
 
-;;interceptor
+;;interceptor, pedestal calls these stuff to reply with a response.
 
 (defn landing-su-15 [service]
   (interceptor
@@ -116,7 +116,7 @@
         (db/removepost database postid)
         (assoc context :response {:status 200 :body (mold/postlist-html (db/getallpost database))})))}))
 
-(def common-interceptors [(bd/body-params) http/html-body])
+(def common-interceptors "wrap all the common interceptor" [(bd/body-params) http/html-body])
 
 (defn baseroutes
   [service]
@@ -132,11 +132,12 @@
     ["/delete/:postid" :get (conj common-interceptors (delete-su-15 service)) :route-name :delete-r]})
 
 (defn make-routes
+  "function to merge the routes"
   [service]
   (route/expand-routes (baseroutes service)))
 
 (defn make-service-map
-  "declaring initial service map"
+  "function to make initial service map"
   [config]
   {:database nil
    ::http/routes nil

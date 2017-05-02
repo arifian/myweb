@@ -1,6 +1,6 @@
 (ns app.database.datomic
   (:require [datomic.api :as d]
-            [app.database.db :as adb]
+            [app.database.abstraction :as adb]
             [com.stuartsierra.component :as component]))
 
 (defn- default-uuid-reader [form]

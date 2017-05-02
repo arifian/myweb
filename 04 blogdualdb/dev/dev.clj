@@ -3,28 +3,28 @@
             [app.system :as sys]
             [clojure.edn :as edn]))
 
-(defn exitdev
-  []
+(defn exit
   "switch to user ns"
+  []
   (println "\nloading user ns... \n")
   (require 'user)
   (in-ns 'user))
 
-(defn config
+(defn dev-config
   "return development configuration map"
   [] 
   (-> "config/config.edn"
       slurp
       edn/read-string))
 
-;; For interactive development
+;; System control
 
 (defonce system (atom nil))
 
 (defn init-dev
-  ""
+  "initialize dev"
   []
-  (reset! system (sys/initsystem (config))))
+  (reset! system (sys/initsystem (dev-config))))
 
 (defn start-dev
   "starts the server"
@@ -41,12 +41,20 @@
   (reset! system nil)
   (println "\n -----------------------system stoped--------------------------- \n"))
 
-(defn go-dev []
+; instant transmission
+
+(defn go-dev
+  "(init-dev)
+  (start-dev)"
+  []
   (init-dev)
   (start-dev))
 
 (defn restart-dev
-  "restart the server"
+  "(stop-dev)
+  (refresh)
+  (init-dev)
+  (start-dev)"
   []
   (stop-dev)
   (refresh)

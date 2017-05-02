@@ -1,6 +1,5 @@
 (ns app.server
   (:require [io.pedestal.http :as http]
-            [io.pedestal.http.route :as route]
             [app.endpoint :as ep]
             [com.stuartsierra.component :as component]))
 

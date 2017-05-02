@@ -1,5 +1,7 @@
 (ns app.template.function)
 
+;random function i dunno where to put
+
 (defn post-list [post]
   (for [key (keys post)]
     [:div {:class "col-sm-4"}
@@ -7,7 +9,9 @@
      [:a {:href (str "/post/" (:number (key post)))} [:h3 (str (:title (key post)))]]
      [:p (str (:content (key post)))[:br]]]))
 
-(defn bootstrap []
+(defn bootstrap
+  "bootstrap config"
+  []
   (for [cnt (range 4)]
     ([[:meta {:charset "utf-8"}]
       [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]

@@ -1,5 +1,5 @@
 (ns app.database.atom
-  (:require [app.database.db :as adb]
+  (:require [app.database.abstraction :as adb]
             [com.stuartsierra.component :as component]))
 
 (def samplepost {:posts {:1 {:number 1 :title "Lorem Ipsum #1" :content (slurp "resources/postsampletext/sampleone.txt")}

@@ -1,22 +1,14 @@
 (ns app.system
   (:require [io.pedestal.http :as http]
             ;[io.pedestal.test :as test]
-            [io.pedestal.http.route :as route]
-            [io.pedestal.http.route.definition.table :refer [table-routes]]
             [com.stuartsierra.component :as component]
-            [ring.middleware.session.cookie :as cookie]
-            [io.pedestal.http.secure-headers :as http.sh]
             [app.database.atom :as atm]
             [app.database.datomic :as dtm]
-            [app.database.db :as db]
+            [app.database :as db]
             [app.endpoint :as ep]
             [app.server :as server]))
 
-;dev utility
-
-#_(make-routes database)
-
-(defn createdb "default to dtm"
+(defn createdb "create/switch db, default to dtm"
   [config]
   (cond
     (= (:dbtype config) :dtm) (dtm/createdb (:dbname config))
@@ -31,7 +23,9 @@
 ;;      :service service
 ;;      :server (server/start-server server)}))
 
-(defn startsystem [system]
+(defn startsystem
+  "function to starts the system using system map"
+  [system]
   (component/start system))
 
 ;; (defn stopsystem [system]
@@ -39,10 +33,15 @@
 ;;         _  (db/stopdb (:database system))]
 ;;     system))
 
-(defn stopsystem [system]
+(defn stopsystem
+  "function to stop the system using system map"
+  [system]
   (component/stop system))
 
-(defn initsystem [config]
+(defn initsystem
+  "Function to initialize (starts all the component) system map, 
+  dependency sorted as database -> service -> config. at the end saves the config in :config key"
+  [config]
   (component/system-map
    :database (createdb config)
    :service (component/using
