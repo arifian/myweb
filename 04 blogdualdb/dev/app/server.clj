@@ -5,18 +5,25 @@
             [com.stuartsierra.component :as component]))
 
 (defn start-server [server]
-  (-> (assoc (:service server) ::http/join? false)
-      (assoc ::http/routes (ep/make-routes (:service server)))
-      http/create-server
-      http/start))
+  (let [service1 (-> (assoc (:service server) ::http/join? false)
+                     (assoc ::http/routes (ep/make-routes (:service server))))
+        runnable-server (http/create-server service1)]
+    (http/start runnable-server)
+    (assoc server :service service1 :runnable-server runnable-server))
+  ;; (-> (assoc (:service server) ::http/join? false)
+  ;;     (assoc ::http/routes (ep/make-routes (:service server)))
+  ;;     http/create-server
+  ;;     http/start)
+  )
 
 (defn stop-server [server]
-  (http/stop server))
+  (http/stop (:runnable-server server))
+  server)
 
-(defrecord Server [service])
+(defrecord Server [service runnable-server])
 
 (defn createserver [config]
-  (Server. nil))
+  (Server. nil nil))
 
 (extend-type Server
   component/Lifecycle

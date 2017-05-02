@@ -19,10 +19,15 @@
 
 ;; For interactive development
 
-(defonce system (atom (sys/initsystem (config))))
+(defonce system (atom nil))
+
+(defn init-dev
+  ""
+  []
+  (reset! system (sys/initsystem (config))))
 
 (defn start-dev
-  "start the server, dev mode. Change the server value to a server start&create with assoc'd service map"
+  "starts the server"
   []
   (println "\n ------------------------starting-system-------------------------- \n")
   (swap! system sys/startsystem)
@@ -36,11 +41,16 @@
   (reset! system nil)
   (println "\n -----------------------system stoped--------------------------- \n"))
 
-(defn restart
+(defn go-dev []
+  (init-dev)
+  (start-dev))
+
+(defn restart-dev
   "restart the server"
   []
   (stop-dev)
   (refresh)
+  (init-dev)
   (start-dev))
 
 ;; (defn test-request "route testing repl function" [verb url]
