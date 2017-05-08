@@ -1,0 +1,19 @@
+Building ...
+... done. Elapsed 0.472480599 seconds
+Watching paths: /home/arifian/codes/produceexperiment/myweb/trycljs/src
+Change detected, recompiling ...
+Compiling src/hello_world/core.cljs
+Copying file:/home/arifian/codes/produceexperiment/myweb/trycljs/src/hello_world/core.cljs to out/hello_world/core.cljs
+... done. Elapsed 0.324605354 seconds
+Change detected, recompiling ...
+Compiling src/hello_world/core.cljs
+Copying file:/home/arifian/codes/produceexperiment/myweb/trycljs/src/hello_world/core.cljs to out/hello_world/core.cljs
+... done. Elapsed 0.371364739 seconds
+Change detected, recompiling ...
+... done. Elapsed 0.232328008 seconds
+Change detected, recompiling ...
+Compiling src/hello_world/core.cljs
+Copying file:/home/arifian/codes/produceexperiment/myweb/trycljs/src/hello_world/core.cljs to out/hello_world/core.cljs
+... done. Elapsed 0.160008902 seconds
+Change detected, recompiling ...
+... done. Elapsed 0.131075207 seconds
